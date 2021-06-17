@@ -20,6 +20,10 @@ public class PrecioPeriodo {
 
 	}
 	
+	public void setValor(double valor) {
+		this.valor = valor;
+	}
+	
 	public LocalDate comienzo() {
 		return this.comienzo;
 	}

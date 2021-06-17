@@ -128,6 +128,10 @@ public class Inmueble implements IVisualizable {
 	public Rankeo rankeo() {
 		return this.rankeo;
 	}
+	
+	public List<PrecioPeriodo> getPrecios() {
+		return this.precios;
+	}
 
 	@Override
 	public void visualizar() {

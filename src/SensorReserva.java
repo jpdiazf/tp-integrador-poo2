@@ -8,7 +8,7 @@ public class SensorReserva {
 	}
 	
 	public void updateReservas(Reserva reserva) {
-		if(reserva.getInmueble().getPropietario() == this.suscriptor) {
+		if(reserva.getInmueble().getPropietario().equals(this.suscriptor)) {
 			this.suscriptor.recibirReserva(reserva);
 		}
 	}

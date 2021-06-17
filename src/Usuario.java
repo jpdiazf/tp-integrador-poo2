@@ -2,7 +2,7 @@ import java.security.DrbgParameters.Reseed;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Usuario {
+public class Usuario implements ISuscriptorReserva {
 	private SitioInmuebles sitio;
 	private String nombre;
 	private String mail;
@@ -48,8 +48,8 @@ public class Usuario {
 	// 	return this.rankeos;
 	// }
 
-    private void recibirReserva(Inmueble inmueble, IFormaDePago formaDePago) {
-        this.reservasRecibidas.add(new Reserva());
+    public void recibirReserva(Reserva reserva) {
+        this.reservasRecibidas.add(reserva);
     }
 
     public void visualizar(IVisualizable visualizable) {
