@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Inmueble implements IVisualizable {
 	
-	private Usuario dueño;
+	private Usuario propietario;
 	private String tipo;
 	private Double superficie;
 	private String pais;
@@ -22,12 +22,12 @@ public class Inmueble implements IVisualizable {
 	private Rankeo rankeo;
 	private Integer vecesAlquilado;
 	
-	public Inmueble(Usuario dueño, String tipo, Double superficie, String pais, String ciudad,
+	public Inmueble(Usuario propietario, String tipo, Double superficie, String pais, String ciudad,
 					String direccion, List<String> servicios, Integer capacidad, List<Foto> fotos,
 					LocalDateTime horarioCheckIn, LocalDateTime horarioCheckOut, Cancelacion politicaCancelacion,
 					List<String> formasDePagoAceptadas, List<PrecioPeriodo> precios) {
 		
-		this.dueño = dueño;
+		this.propietario = propietario;
 		this.tipo = tipo ;
 		this.superficie = superficie;
 		this.pais = pais;
@@ -84,27 +84,27 @@ public class Inmueble implements IVisualizable {
 
 	
 	public Usuario getPropietario() {
-		return this.dueño;
+		return this.propietario;
 	}
-	public String tipo() {
+	public String getTipo() {
 		return this.tipo;
 	}
-	public double superficie() {
+	public double getSuperficie() {
 		return this.superficie;
 	}
-	public String pais() {
+	public String getPais() {
 		return this.pais;
 	}
-	public String ciudad() {
+	public String getCiudad() {
 		return this.ciudad;
 	}
-	public String direccion() {
+	public String getDireccion() {
 		return this.direccion;
 	}
-	public List<String> servicios() {
+	public List<String> getServicios() {
 		return this.servicios;
 	}
-	public Integer capacidad() {
+	public Integer getCapacidad() {
 		return this.capacidad;
 	}
 	public List<Foto> fotos() {

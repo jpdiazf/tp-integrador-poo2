@@ -21,4 +21,9 @@ public class Reserva {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	public Inmueble getInmueble() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
