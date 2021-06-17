@@ -83,7 +83,7 @@ public class Inmueble implements IVisualizable {
 	}
 
 	
-	public Usuario dueño() {
+	public Usuario getPropietario() {
 		return this.dueño;
 	}
 	public String tipo() {

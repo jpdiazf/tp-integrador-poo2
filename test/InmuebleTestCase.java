@@ -18,7 +18,7 @@ class InmuebleTestCase {
 	
 	@BeforeEach
 	void setup() {
-		casa = new Inmueble(new Usuario(), "CASA", 40.0, "Argentina", "Quilmes","Mitre 406", Arrays.asList("WIFI","AIRE"),
+		casa = new Inmueble(null, "CASA", 40.0, "Argentina", "Quilmes","Mitre 406", Arrays.asList("WIFI","AIRE"),
 						5, new ArrayList<Foto>(),LocalDateTime.of(0,1,1,10, 0), LocalDateTime.of(0,1,1,22,0), new CancelacionGratuita(),
 						new ArrayList<String>(), 
 						Arrays.asList(new PrecioPeriodo(LocalDate.of(2021, 5, 1), LocalDate.of(2021, 06, 1), 500.0)));
