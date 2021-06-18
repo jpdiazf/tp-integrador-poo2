@@ -1,3 +1,4 @@
+package clases;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,6 +8,12 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
+
+import clases.Cancelacion;
+import clases.CancelacionGratuita;
+import clases.CancelacionIntermedia;
+import clases.Reserva;
+import clases.SinCancelacion;
 
 class CancelacionTestCase {
 

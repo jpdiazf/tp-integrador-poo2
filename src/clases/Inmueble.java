@@ -1,7 +1,10 @@
+package clases;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import interfaces.IVisualizable;
 
 public class Inmueble implements IVisualizable {
 	

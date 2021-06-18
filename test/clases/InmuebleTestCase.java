@@ -1,3 +1,4 @@
+package clases;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,6 +10,11 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import clases.CancelacionGratuita;
+import clases.Foto;
+import clases.Inmueble;
+import clases.PrecioPeriodo;
 
 class InmuebleTestCase {
 

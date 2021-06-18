@@ -1,15 +1,17 @@
+package clases;
+import interfaces.ISuscriptorCancelacion;
 
 public class SensorCancelacion {
 	
 	private ISuscriptorCancelacion suscriptor;
 	private String colorFuente;
-	private int tamañoFuente;
+	private int tamanioFuente;
 	private Inmueble inmuebleDeInteres;
 	
-	public SensorCancelacion(ISuscriptorCancelacion suscriptor, String colorFuente, int tamañoFuente, Inmueble inmuebleDeInteres) {
+	public SensorCancelacion(ISuscriptorCancelacion suscriptor, String colorFuente, int tamanioFuente, Inmueble inmuebleDeInteres) {
 		this.suscriptor = suscriptor;
 		this.colorFuente = colorFuente;
-		this.tamañoFuente = tamañoFuente;
+		this.tamanioFuente = tamanioFuente;
 		this.inmuebleDeInteres = inmuebleDeInteres;
 	}
 	
@@ -18,7 +20,7 @@ public class SensorCancelacion {
 			
 			String message = "El/la " + reserva.getInmueble().getTipo() + " que te interesa se ha liberado! Corre a reservarlo!";
 			
-			suscriptor.popUp(message, this.colorFuente, this.tamañoFuente);
+			suscriptor.popUp(message, this.colorFuente, this.tamanioFuente);
 		}
 	}
 

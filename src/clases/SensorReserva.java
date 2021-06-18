@@ -1,3 +1,5 @@
+package clases;
+import interfaces.ISuscriptorReserva;
 
 public class SensorReserva {
 

@@ -1,3 +1,5 @@
+package clases;
+import interfaces.ISuscriptorBajaDePrecio;
 
 public class SensorBajaDePrecio {
 

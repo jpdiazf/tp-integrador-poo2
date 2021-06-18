@@ -1,3 +1,4 @@
+package clases;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -5,6 +6,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.any;
 
 import org.junit.jupiter.api.Test;
+
+import clases.Inmueble;
+import clases.Reserva;
+import clases.SensorBajaDePrecio;
+import clases.SensorCancelacion;
+import clases.SensorReserva;
+import clases.Usuario;
+import interfaces.ISuscriptorBajaDePrecio;
+import interfaces.ISuscriptorCancelacion;
 
 class AlertasTestCase {
 	

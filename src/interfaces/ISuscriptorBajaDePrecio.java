@@ -1,3 +1,5 @@
+package interfaces;
+import clases.Inmueble;
 
 public interface ISuscriptorBajaDePrecio {
 	

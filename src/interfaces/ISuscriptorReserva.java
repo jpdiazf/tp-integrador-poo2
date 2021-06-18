@@ -1,3 +1,5 @@
+package interfaces;
+import clases.Reserva;
 
 public interface ISuscriptorReserva {
 	

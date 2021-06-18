@@ -1,3 +1,4 @@
+package clases;
 import java.time.LocalDate;
 
 public class Reserva {
@@ -23,6 +24,11 @@ public class Reserva {
 	}
 
 	public Inmueble getInmueble() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Usuario getUsuario() {
 		// TODO Auto-generated method stub
 		return null;
 	}
