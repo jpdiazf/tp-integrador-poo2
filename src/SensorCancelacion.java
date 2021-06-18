@@ -14,7 +14,7 @@ public class SensorCancelacion {
 	}
 	
 	public void updateCancelacion(Reserva reserva) {
-		if(reserva.getInmueble() == this.inmuebleDeInteres) {
+		if(reserva.getInmueble().equals(this.inmuebleDeInteres)) {
 			
 			String message = "El/la " + reserva.getInmueble().getTipo() + " que te interesa se ha liberado! Corre a reservarlo!";
 			
