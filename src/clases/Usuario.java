@@ -2,11 +2,13 @@ package clases;
 import java.util.ArrayList;
 import java.util.List;
 
+import excepciones.EmailAdressNotFound;
 import excepciones.ReservationNotFound;
 import interfaces.IRankeable;
 import interfaces.ISuscriptorReserva;
 import interfaces.IVisualizable;
 
+// TODO: que el sitio agregue el mail del usuario cuando se instancie.
 public class Usuario implements ISuscriptorReserva, IRankeable {
 	private SitioInmuebles sitio;
 	private String nombre;
@@ -69,13 +71,13 @@ public class Usuario implements ISuscriptorReserva, IRankeable {
         visualizable.visualizar();
     }
 
-	public void aceptarReserva(Reserva reserva) {        
+	public void aceptarReserva(Reserva reserva) throws EmailAdressNotFound {        
 		String destinatario = this.mail;
 		String destino = reserva.getUsuario().getMail();
         Mail mail = new Mail(destinatario, destino, "Aceptación de Reserva", "Se aceptó su reserva. Se adjunta a continuación", reserva);
         
         this.sitio.aceptarReserva(reserva);
-        this.mailServer.enviarMail(mail);
+        this.enviarMail(mail);
 	}
 
 	public void rechazarReserva(Reserva reserva) throws Exception {
@@ -83,7 +85,15 @@ public class Usuario implements ISuscriptorReserva, IRankeable {
 		
 		sitio.rechazarReserva(reserva);
 	}
+	
+	public void enviarMail(Mail mail) throws EmailAdressNotFound {
+		this.mailServer.enviarMail(mail);
+	}
 
+	public void recibirMail(Mail mail) {
+		// TODO Auto-generated method stub
+	}
+	
 	// Privates
 	private void validarCancelacion(Reserva reserva) throws Exception {
 		if(!this.reservasRealizadas.contains(reserva)) {
@@ -95,8 +105,7 @@ public class Usuario implements ISuscriptorReserva, IRankeable {
 		if(!this.reservasRecibidas.contains(reserva)) {
 			throw new ReservationNotFound("No se puede rechazar una Reserva no realizada");
 		}
-	}
-	
+	}	
 }
 
 

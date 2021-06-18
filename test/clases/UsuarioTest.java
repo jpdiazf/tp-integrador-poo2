@@ -124,12 +124,12 @@ class UsuarioTest {
     }
     
 //    TODO: ver qué onda con este test.
-//    @Test
-//    void usuarioCancelaUnaReservaYFallaTest() throws Exception {
-//    	Reserva reserva = mock(Reserva.class);
-//
-//    	assertThrows(ReservationNotFound.class, () -> rodri.cancelarReserva(reserva));
-//    }
+    @Test
+    void usuarioCancelaUnaReservaYFallaTest() throws Exception {
+    	Reserva reserva = mock(Reserva.class);
+
+    	assertThrows(ReservationNotFound.class, () -> rodri.cancelarReserva(reserva));
+    }
     
     @Test
     void usuarioRechazaUnaReservaDeOtroUsuarioTest() throws Exception {
