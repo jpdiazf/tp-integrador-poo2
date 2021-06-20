@@ -11,10 +11,6 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import clases.CancelacionGratuita;
-import clases.Foto;
-import clases.Inmueble;
-import clases.PrecioPeriodo;
 
 class InmuebleTestCase {
 
@@ -33,7 +29,7 @@ class InmuebleTestCase {
 	@Test
 	void precioPorPeriodoTest() {
 		
-		double valor = casa.precioPorPeriodo(LocalDate.of(2021, 5, 5), LocalDate.of(2021, 5, 8));
+		double valor = casa.getPrecioPorPeriodo(LocalDate.of(2021, 5, 5), LocalDate.of(2021, 5, 8));
 		
 		assertEquals(1500.0, valor);
 		

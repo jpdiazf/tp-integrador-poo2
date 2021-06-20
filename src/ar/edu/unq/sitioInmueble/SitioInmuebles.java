@@ -6,36 +6,57 @@ import java.util.HashSet;
 
 
 import ar.edu.unq.siteGUI.IGraphicalUserInterface;
+import clases.Inmueble;
+import clases.PoliticaCancelacion;
+import clases.Reserva;
+import clases.Usuario;
+import interfaces.IVisualizable;
 
 
 public class SitioInmuebles {
 
 	
-	private HashSet<IPoliticaCancelacion> politicasCancelacion;
-	private ArrayList<IReserva> reservas;
-	private ArrayList<IInmueble> inmueblesDeAlta;
-	private ArrayList<String> tiposInmueble;
-	private ArrayList<String> serviciosInmueble;
-	private ArrayList<IUsuario> usuarios;
+	private HashSet<PoliticaCancelacion> politicasCancelacion = new HashSet<PoliticaCancelacion>();
+	private ArrayList<Reserva> reservas = new ArrayList<Reserva>();
+	private ArrayList<Inmueble> inmueblesDeAlta = new ArrayList<Inmueble>();
+	private ArrayList<String> tiposInmueble = new ArrayList<String>();
+	private ArrayList<String> serviciosInmueble = new ArrayList<String>();
+	private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 	private IGraphicalUserInterface gui;
 	
 	
-	public SitioInmuebles() {
-		
+	public SitioInmuebles(IGraphicalUserInterface gui) {
+		this.gui = gui;
 	}
 	
-	
-	private ArrayList<IReserva> getReservas() {
+
+	public HashSet<PoliticaCancelacion> getPoliticasCancelacion() {
+		return politicasCancelacion;
+	}
+
+	public ArrayList<String> getServiciosInmueble() {
+		return serviciosInmueble;
+	}
+
+	public ArrayList<Usuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public ArrayList<Reserva> getReservas() {
 		return this.reservas;
 	}
 	
-	private ArrayList<IInmueble> getInmueblesDeAlta() {
+	public ArrayList<Inmueble> getInmueblesDeAlta() {
 		return this.inmueblesDeAlta;
+	}
+	
+	public ArrayList<String> getTiposInmueble() {
+		return this.tiposInmueble;
 	}
 	
 	//ALTAS//
 	
-	public void darDeAltaUsuario(IUsuario usuario) {
+	public void darDeAltaUsuario(Usuario usuario) {
 		usuarios.add(usuario);
 	}
 	
@@ -47,34 +68,37 @@ public class SitioInmuebles {
 		serviciosInmueble.add(servicioInmueble);
 	}
 	
-	public void darDeAltaPoliticaCancelacion(IPoliticaCancelacion politicaC) {
+	public void darDeAltaPoliticaCancelacion(PoliticaCancelacion politicaC) {
 		this.politicasCancelacion.add(politicaC);
+	}
+	
+	public void darDeAltaInmueble(Inmueble inmueble) {
+		this.inmueblesDeAlta.add(inmueble);
 	}
 	
 	//BÚSQUEDAS - VISUALIZACIONES //
 	
-	public void realizarBusqueda(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida,
-						Integer cantidadHuespedes, Double precioMinimo, Double precioMaximo) {
+	public void realizarBusqueda(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, Integer cantidadHuespedes, Double precioMinimo, Double precioMaximo){
 		
-		ArrayList<IInmueble> inmueblesFiltrados = new ArrayList<IInmueble>();
-		this.tiposInmueble.forEach(null);
+		ArrayList<Inmueble> inmueblesFiltrados = new ArrayList<Inmueble>();
+		//this.tiposInmueble.forEach(null);
 		
-		for(IInmueble inmueble:this.getInmueblesDeAlta()) {
-			if(inmueble.getCiudad() == ciudad && fechaEntrada.isAfter(inmueble.getHorarioCheckIn()) && fechaSalida.isBefore(inmueble.getHorarioCheckOut())) {
+		for(Inmueble inmueble:this.getInmueblesDeAlta()) {
+			if(inmueble.getCiudad() == ciudad && !this.hayReservaEn(inmueble, fechaEntrada, fechaSalida)) {
 				inmueblesFiltrados.add(inmueble);
 			}
 		}
 		
 		if(cantidadHuespedes != null) {
-			inmueblesFiltrados.removeIf(inmueble -> inmueble.getCantidadHuespedes() < cantidadHuespedes);
+			inmueblesFiltrados.removeIf(inmueble -> inmueble.getCapacidad() < cantidadHuespedes);
 		}
 		
 		if(precioMinimo != null) {
-			inmueblesFiltrados.removeIf(inmueble -> inmueble.getPrecioPorDia() > precioMinimo);
+			inmueblesFiltrados.removeIf(inmueble -> inmueble.getPrecioPorPeriodo(fechaEntrada, fechaSalida) > precioMinimo);
 		}
 		
 		if(precioMaximo != null) {
-			inmueblesFiltrados.removeIf(inmueble -> inmueble.getPrecioPorDia() > precioMaximo);
+			inmueblesFiltrados.removeIf(inmueble -> inmueble.getPrecioPorPeriodo(fechaEntrada, fechaSalida) > precioMaximo);
 		}
 		
 		//return inmueblesFiltrados;
@@ -83,58 +107,71 @@ public class SitioInmuebles {
 		
 	}
 	
-	public void visualizarInmueble(IInmueble inmueble) {
-		
-		//EXcepción si inmueble no está en pantalla.
-		
-		gui.mostrarInformacion(inmueble);
-		
+	public boolean hayReservaEn(Inmueble inmueble, LocalDate fechaEntrada, LocalDate fechaSalida) {
+		for(Reserva reserva:this.getReservas()) {
+			if(reserva.getInmueble().equals(inmueble) && (reserva.getComienzo().isAfter(fechaSalida) || reserva.getFin().isBefore(fechaEntrada))) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
-	public void visualizarPropietario(IInmueble inmueble) {
+	public void visualizar(IVisualizable visualizable) {
 		
-		gui.mostrarInformacion(inmueble.getPropietario());
+		//EXcepción si inmueble no está en pantalla.
+		//Agregado para User
+		gui.mostrarInformacion(visualizable);
 		
 	}
 	
 	
 	//RESERVAS//
 	/*
-	public void realizarReserva(IInmueble inmueble, IFormaDePago formaDePago, IUsuario inquilino, LocalDate fechaEntrada, LocalDate fechaSalida) {
+	public void recibirReserva(Usuario inquilino, Inmueble inmueble, IFormaDePago formaDePago, LocalDate fechaEntrada, LocalDate fechaSalida) {
 		
-		IReserva reservaRealizada = new IReserva(inquilino, inmueble, formaDePago, fechaEntrada, fechaSalida);
+		Reserva reservaRealizada = new Reserva(inquilino, inmueble, formaDePago, fechaEntrada, fechaSalida); //puede notificar al propietario al instanciarse??
 		reservas.add(reservaRealizada);
 		
-		this.notificarReserva(reservaRealizada);
+		reservaRealizada.getInmueble().getPropietario().recibirReserva(reservaRealizada);; //raro
 		
-	}
-	
-	private void notificarReserva(IReserva reserva) {
-		reserva.getInmueble().getPropietario().notificarReserva(reserva);
-	}
-	
-	
-	public void aprobarReserva(IReserva reserva) {
-		IReserva reservaAAprobar= this.getReservas().stream().filter(r -> r.equals(reserva)).findFirst().get();
-		reservaAAprobar.aprobar();
-		reservaAAprobar.getInquilino().notificarAprobacion(reservaAAprobar);
-	}
-	
-	public void rechazarReserva(IReserva reserva) {
-		IReserva reservaARechazar= this.getReservas().stream().filter(r -> r.equals(reserva)).findFirst().get();
-		reservaARechazar.rechazar();
-		reservaARechazar.getInquilino().notificarRechazo(reservaAAprobar);
 	}
 	*/
 	
+	public void recibirReserva(Reserva reserva) {
+		Reserva reservaRealizada = this.buscarReserva(reserva);
+		reservas.add(reservaRealizada);
+	}
+	
+	public void aprobarReserva(Reserva reserva) {
+		Reserva reservaAAprobar= this.buscarReserva(reserva);
+		reservaAAprobar.aprobar();
+		//reservaAAprobar.getInquilino().notificarAprobacion(reservaAAprobar);
+	}
+	
+	public void rechazarReserva(Reserva reserva) {
+		Reserva reservaARechazar= this.buscarReserva(reserva);
+		reservaARechazar.rechazar();
+		//reservaARechazar.getInquilino().notificarRechazo(reservaAAprobar);
+	}
+	
+	public void cancelarReserva(Reserva reserva) {
+		Reserva reservaACancelar = this.buscarReserva(reserva);
+		reservaACancelar.cancelar();
+		this.getReservas().remove(reservaACancelar);
+	}
+	
+	private Reserva buscarReserva(Reserva reserva) {
+		return this.getReservas().stream().filter(r -> r.equals(reserva)).findFirst().get();
+	}
+	
 	//LISTADOS DE GESTIÓN//
 	
-	public ArrayList<IUsuario> topTenInquilinosActivos() {
-		ArrayList<IUsuario> usuarios = new ArrayList<IUsuario>(this.usuarios); 
-		ArrayList<IUsuario> inquilinosActivos = new ArrayList<IUsuario>();
+	public ArrayList<Usuario> topTenInquilinosActivos() {
+		ArrayList<Usuario> usuarios = new ArrayList<Usuario>(this.usuarios); 
+		ArrayList<Usuario> inquilinosActivos = new ArrayList<Usuario>();
 		
 		for(int i = 1; (i <= 10 && !usuarios.isEmpty()); i++) {
-			IUsuario inquilinoMasActivo = usuarios.stream().max((IUsuario user1, IUsuario user2) -> (Integer.compare(user1.cuantosInmueblesAlquilo(), user2.cuantosInmueblesAlquilo()))).get();
+			Usuario inquilinoMasActivo = usuarios.stream().max((Usuario user1, Usuario user2) -> (Integer.compare(user1.cuantosInmueblesAlquilo(), user2.cuantosInmueblesAlquilo()))).get();
 			inquilinosActivos.add(inquilinoMasActivo);
 			usuarios.remove(inquilinoMasActivo);
 		}
@@ -142,10 +179,10 @@ public class SitioInmuebles {
 		
 	}
 	
-	public ArrayList<IInmueble> mostrarInmueblesLibres() {
-		ArrayList<IInmueble> inmuebles = new ArrayList<IInmueble>();
+	public ArrayList<Inmueble> mostrarInmueblesLibres() {
+		ArrayList<Inmueble> inmuebles = new ArrayList<Inmueble>();
 		
-		for(IInmueble inmueble:this.getInmueblesDeAlta()) {
+		for(Inmueble inmueble:this.getInmueblesDeAlta()) {
 			if(!inmueble.estaOcupado()) {
 				inmuebles.add(inmueble);
 			}
@@ -154,11 +191,11 @@ public class SitioInmuebles {
 		return inmuebles;
 	}
 	
-	public boolean estaOcupado(IInmueble inmueble) {
+	public boolean estaOcupado(Inmueble inmueble) {
 		LocalDate hoy = LocalDate.now();
 		
 		if(this.estaReservado(inmueble)) {
-			IReserva reserva = this.getReservas().stream().filter(r -> r.getInmueble().equals(inmueble)).findFirst().get();
+			Reserva reserva = this.getReservas().stream().filter(r -> r.getInmueble().equals(inmueble)).findFirst().get();
 			return(hoy.isAfter(reserva.getComienzo()) && hoy.isBefore(reserva.getFin()));
 		}
 		else {
@@ -167,8 +204,8 @@ public class SitioInmuebles {
 			
 	}
 	
-	public boolean estaReservado(IInmueble inmueble) {
-		for(IReserva reserva:this.getReservas()) {
+	public boolean estaReservado(Inmueble inmueble) {
+		for(Reserva reserva:this.getReservas()) {
 			if(reserva.getInmueble().equals(inmueble)) {
 				return true;
 			}
@@ -186,7 +223,7 @@ public class SitioInmuebles {
 		int inmueblesAlquilados = 0;
 		LocalDate hoy = LocalDate.now();
 		
-		for(IReserva reserva:this.getReservas()) {
+		for(Reserva reserva:this.getReservas()) {
 			if(hoy.isAfter(reserva.getComienzo()) && hoy.isBefore(reserva.getFin())) {
 				inmueblesAlquilados++;
 			}

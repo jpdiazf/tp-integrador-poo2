@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import interfaces.IVisualizable;
+import ar.edu.unq.sitioInmueble.*;
 
 public class Inmueble implements IVisualizable {
 	
@@ -19,7 +20,7 @@ public class Inmueble implements IVisualizable {
 	private List<Foto> fotos;
 	private LocalDateTime horarioCheckIn;
 	private LocalDateTime horarioCheckOut;
-	private Cancelacion politicaCancelacion;
+	private PoliticaCancelacion politicaCancelacion;
 	private List<String> formasDePagoAceptadas; // DEFINIR LA INTERFACE
 	private List<PrecioPeriodo> precios;
 	private Rankeo rankeo;
@@ -27,7 +28,7 @@ public class Inmueble implements IVisualizable {
 	
 	public Inmueble(Usuario propietario, String tipo, Double superficie, String pais, String ciudad,
 					String direccion, List<String> servicios, Integer capacidad, List<Foto> fotos,
-					LocalDateTime horarioCheckIn, LocalDateTime horarioCheckOut, Cancelacion politicaCancelacion,
+					LocalDateTime horarioCheckIn, LocalDateTime horarioCheckOut, PoliticaCancelacion politicaCancelacion,
 					List<String> formasDePagoAceptadas, List<PrecioPeriodo> precios) {
 		
 		this.propietario = propietario;
@@ -48,15 +49,15 @@ public class Inmueble implements IVisualizable {
 		
 	}
 	
-	public double precioPorPeriodo(LocalDate desde, LocalDate hasta) {
+	public double getPrecioPorPeriodo(LocalDate desde, LocalDate hasta) {
 		double total = 0;
 		for (LocalDate fecha = desde; fecha.isBefore(hasta); fecha = fecha.plusDays(1)) {
-		    total += this.precio(fecha);
+		    total += this.getPrecio(fecha);
 		}
 		return total;
 	}
 	
-	private double precio(LocalDate fecha) {
+	private double getPrecio(LocalDate fecha) {
 		double retorno = 0; 
 		for(PrecioPeriodo p : precios) {
 			if (p.pertenceAlRango(fecha)) {
@@ -67,7 +68,7 @@ public class Inmueble implements IVisualizable {
 		return retorno;
 	}
 	
-	public boolean estaPublicadoPerido(LocalDate desde, LocalDate hasta) {
+	public boolean estaPublicadoPeriodo(LocalDate desde, LocalDate hasta) {
 		for (LocalDate fecha = desde; fecha.isBefore(hasta); fecha = fecha.plusDays(1)) {
 		    if(! this.estaPublicado(fecha)) {
 		    	return false;
@@ -113,22 +114,22 @@ public class Inmueble implements IVisualizable {
 	public List<Foto> fotos() {
 		return this.fotos;
 	}
-	public LocalDateTime horarioCheckIn() {
+	public LocalDateTime getHorarioCheckIn() {
 		return this.horarioCheckIn;
 	}
-	public LocalDateTime horarioCheckOut() {
+	public LocalDateTime getHorarioCheckOut() {
 		return this.horarioCheckOut;
 	}
 	public Integer vecesAlquilado() {
 		return this.vecesAlquilado;
 	}
-	public Cancelacion politicaCancelacion() {
+	public PoliticaCancelacion getPoliticaCancelacion() {
 		return this.politicaCancelacion;
 	}
-	public List<String> formasDePagoAceptadas() {
+	public List<String> getFormasDePagoAceptadas() {
 		return this.formasDePagoAceptadas;
 	}
-	public Rankeo rankeo() {
+	public Rankeo getRankeo() {
 		return this.rankeo;
 	}
 	
@@ -140,6 +141,10 @@ public class Inmueble implements IVisualizable {
 	public void visualizar() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public boolean estaOcupado() {
+		return this.getPropietario().getSitioInmuebles().estaOcupado(this);
 	}
 	
 }

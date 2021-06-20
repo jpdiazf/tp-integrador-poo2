@@ -2,6 +2,7 @@ package clases;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.unq.sitioInmueble.SitioInmuebles;
 import excepciones.EmailAdressNotFound;
 import excepciones.ReservationNotFound;
 import interfaces.IRankeable;
@@ -9,8 +10,8 @@ import interfaces.ISuscriptorReserva;
 import interfaces.IVisualizable;
 
 // TODO: que el sitio agregue el mail del usuario cuando se instancie.
-public class Usuario implements ISuscriptorReserva, IRankeable {
-	private SitioInmuebles sitio;
+public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
+	private SitioInmuebles sitioInmuebles;
 	private String nombre;
 	private String mail;
 	private String nroTelefono;
@@ -18,13 +19,15 @@ public class Usuario implements ISuscriptorReserva, IRankeable {
     private List<Reserva> reservasRecibidas = new ArrayList<>();
     private List<Reserva> reservasRealizadas = new ArrayList<>();
     private MailServer mailServer;
+    private int inmueblesAlquiladosInquilino;
 
 	public Usuario(SitioInmuebles sitio, String nombre, String mail, String nroTelefono, MailServer mailServer) {
-		this.sitio = sitio;
+		this.sitioInmuebles = sitio;
 		this.nombre = nombre;
 		this.mail = mail;
 		this.nroTelefono = nroTelefono;
         this.mailServer = mailServer;
+        this.inmueblesAlquiladosInquilino = 0; //sumará al alquilar...
 	}
 
 	public String getMail() {
@@ -36,11 +39,11 @@ public class Usuario implements ISuscriptorReserva, IRankeable {
     }
 
 	public void ponerEnAlquiler(Inmueble inmueble) {
-		this.sitio.agregarInmueble(inmueble);
+		this.sitioInmuebles.darDeAltaInmueble(inmueble);
 	}
     
 	public void realizarReserva(Reserva reserva) {
-        sitio.recibirReserva(reserva);
+        sitioInmuebles.recibirReserva(reserva);
         this.reservasRealizadas.add(reserva);
     }
 
@@ -59,7 +62,7 @@ public class Usuario implements ISuscriptorReserva, IRankeable {
 	public void cancelarReserva(Reserva reserva) throws Exception {
 		this.validarCancelacion(reserva);
 		
-		this.sitio.cancelarReserva(reserva);
+		this.sitioInmuebles.cancelarReserva(reserva);
 		this.reservasRealizadas.remove(reserva);
 	}
 	
@@ -73,17 +76,17 @@ public class Usuario implements ISuscriptorReserva, IRankeable {
 
 	public void aceptarReserva(Reserva reserva) throws EmailAdressNotFound {        
 		String destinatario = this.mail;
-		String destino = reserva.getUsuario().getMail();
+		String destino = reserva.getInquilino().getMail();
         Mail mail = new Mail(destinatario, destino, "Aceptación de Reserva", "Se aceptó su reserva. Se adjunta a continuación", reserva);
         
-        this.sitio.aceptarReserva(reserva);
+        this.sitioInmuebles.aprobarReserva(reserva);
         this.enviarMail(mail);
 	}
 
 	public void rechazarReserva(Reserva reserva) throws Exception {
 		this.validarRechazo(reserva);
 		
-		sitio.rechazarReserva(reserva);
+		sitioInmuebles.rechazarReserva(reserva);
 	}
 	
 	public void enviarMail(Mail mail) throws EmailAdressNotFound {
@@ -106,6 +109,21 @@ public class Usuario implements ISuscriptorReserva, IRankeable {
 			throw new ReservationNotFound("No se puede rechazar una Reserva no realizada");
 		}
 	}	
+	
+	public int cuantosInmueblesAlquilo() {
+		return this.inmueblesAlquiladosInquilino;
+	}
+	
+	public SitioInmuebles getSitioInmuebles() {
+		return this.sitioInmuebles;
+	}
+
+	@Override
+	public void visualizar() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
 
 

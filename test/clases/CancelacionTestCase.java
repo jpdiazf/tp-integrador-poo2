@@ -9,16 +9,10 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import clases.Cancelacion;
-import clases.CancelacionGratuita;
-import clases.CancelacionIntermedia;
-import clases.Reserva;
-import clases.SinCancelacion;
-
 class CancelacionTestCase {
 
 	Reserva r;
-	Cancelacion c;
+	PoliticaCancelacion c;
 
 	
 	@Test
@@ -28,9 +22,9 @@ class CancelacionTestCase {
 		c = new SinCancelacion();
 		r = mock(Reserva.class);
 		
-		when( r.comienzo() ).thenReturn(null);
-		when( r.fin() ).thenReturn(null);
-		when( r.valor() ).thenReturn((double) 5000);
+		when( r.getComienzo() ).thenReturn(null);
+		when( r.getFin() ).thenReturn(null);
+		when( r.getPrecio() ).thenReturn((double) 5000);
 		
 		//Excersice
 		double valor = c.valor(r);
@@ -49,17 +43,17 @@ class CancelacionTestCase {
 		//Setup
 		c = new CancelacionGratuita();
 		r = mock(Reserva.class);
-		when( r.valor() ).thenReturn((double) 5000);
+		when( r.getPrecio() ).thenReturn((double) 5000);
 
-		when( r.comienzo() ).thenReturn(LocalDate.now().plusDays(10));
-		when( r.fin() ).thenReturn(LocalDate.now().plusDays(20));
+		when( r.getComienzo() ).thenReturn(LocalDate.now().plusDays(10));
+		when( r.getFin() ).thenReturn(LocalDate.now().plusDays(20));
 
 		//Excersice
 		double valorALos10Dias = c.valor(r);
 			
 		//Setup
-		when( r.comienzo() ).thenReturn(LocalDate.now().plusDays(9));
-		when( r.fin() ).thenReturn(LocalDate.now().plusDays(19));
+		when( r.getComienzo() ).thenReturn(LocalDate.now().plusDays(9));
+		when( r.getFin() ).thenReturn(LocalDate.now().plusDays(19));
 		
 		//Excersice
 		double valorALos9Dias = c.valor(r);
@@ -79,31 +73,31 @@ class CancelacionTestCase {
 		//Setup
 		c = new CancelacionIntermedia();
 		r = mock(Reserva.class);
-		when( r.valor() ).thenReturn((double) 5000);
+		when( r.getPrecio() ).thenReturn((double) 5000);
 
-		when( r.comienzo() ).thenReturn(LocalDate.now().plusDays(20));
-		when( r.fin() ).thenReturn(null);
+		when( r.getComienzo() ).thenReturn(LocalDate.now().plusDays(20));
+		when( r.getFin() ).thenReturn(null);
 
 		//Excersice
 		double valorALos20Dias = c.valor(r);
 			
 		//Setup
-		when( r.comienzo() ).thenReturn(LocalDate.now().plusDays(19));
-		when( r.fin() ).thenReturn(null);
+		when( r.getComienzo() ).thenReturn(LocalDate.now().plusDays(19));
+		when( r.getFin() ).thenReturn(null);
 		
 		//Excersice
 		double valorALos19Dias = c.valor(r);
 
 		//Setup
-		when( r.comienzo() ).thenReturn(LocalDate.now().plusDays(10));
-		when( r.fin() ).thenReturn(null);
+		when( r.getComienzo() ).thenReturn(LocalDate.now().plusDays(10));
+		when( r.getFin() ).thenReturn(null);
 		
 		//Excersice
 		double valorALos10Dias = c.valor(r);		
 		
 		//Setup
-		when( r.comienzo() ).thenReturn(LocalDate.now().plusDays(9));
-		when( r.fin() ).thenReturn(null);
+		when( r.getComienzo() ).thenReturn(LocalDate.now().plusDays(9));
+		when( r.getFin() ).thenReturn(null);
 		
 		//Excersice
 		double valorALos9Dias = c.valor(r);	

@@ -4,7 +4,7 @@ package clases;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class CancelacionGratuita extends Cancelacion{
+public class CancelacionGratuita extends PoliticaCancelacion{
 
 
 	//Cancelación gratuita hasta 10 días antes de la fecha de inicio de la
@@ -17,10 +17,10 @@ public class CancelacionGratuita extends Cancelacion{
 	@Override
 	double montoCancelacion(Reserva reserva, LocalDate fecha) {
 		double monto = 0;
-		long diasReserva = ChronoUnit.DAYS.between(reserva.comienzo(), reserva.fin());
-		long diferencia = ChronoUnit.DAYS.between(fecha, reserva.comienzo());
+		long diasReserva = ChronoUnit.DAYS.between(reserva.getComienzo(), reserva.getFin());
+		long diferencia = ChronoUnit.DAYS.between(fecha, reserva.getComienzo());
 		if(diferencia < 10) {
-			monto = (reserva.valor() / diasReserva) * 2;
+			monto = (reserva.getPrecio() / diasReserva) * 2;
 		}
 		return monto;
 	}

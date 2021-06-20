@@ -4,7 +4,7 @@ package clases;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class SinCancelacion extends Cancelacion {
+public class SinCancelacion extends PoliticaCancelacion {
 
 	//Sin cancelación: en caso de cancelar el usuario de todas formas paga
 	//los días que había reservado.
@@ -15,7 +15,7 @@ public class SinCancelacion extends Cancelacion {
 	
 	@Override
 	double montoCancelacion(Reserva reserva, LocalDate fecha) {
-		return reserva.valor();
+		return reserva.getPrecio();
 	}
 	
 	

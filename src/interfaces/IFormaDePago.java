@@ -1,6 +1,7 @@
 package interfaces;
-import clases.SitioInmuebles;
+
+import ar.edu.unq.sitioInmueble.SitioInmuebles;
 
 public interface IFormaDePago {
-    public void pagar(SitioInmuebles sitio);
+    public void pagar(Double monto, SitioInmuebles sitio);
 }

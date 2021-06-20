@@ -2,21 +2,21 @@ package ar.edu.unq.siteGUI;
 
 import java.util.ArrayList;
 
-import ar.edu.unq.sitioInmueble.IInmueble;
-//import ar.edu.unq.sitioInmueble.IUsuario;
-import ar.edu.unq.sitioInmueble.IVisualizable;
+import clases.Inmueble;
+import interfaces.IVisualizable;
+
 
 public class GraphicalUserInterface implements IGraphicalUserInterface {
 
-	private ArrayList<IInmueble> inmueblesEnPantalla;
+	private ArrayList<Inmueble> visualizablesEnPantalla;
 	
 
-	public void mostrarEnPantalla(ArrayList<IInmueble> inmuebles) {
-		this.inmueblesEnPantalla = inmuebles;
+	public void mostrarEnPantalla(ArrayList<Inmueble> inmuebles) {
+		this.visualizablesEnPantalla = inmuebles;
 	}
 	
-	public ArrayList<IInmueble> getInmueblesEnPantalla() {
-		return this.inmueblesEnPantalla;
+	public ArrayList<Inmueble> getInmueblesEnPantalla() {
+		return this.visualizablesEnPantalla;
 	}
 	
 	public void mostrarInformacion(IVisualizable visualizable) {

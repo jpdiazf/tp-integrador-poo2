@@ -8,10 +8,10 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ar.edu.unq.sitioInmueble.SitioInmuebles;
 import clases.Inmueble;
 import clases.MailServer;
 import clases.Rankeo;
-import clases.SitioInmuebles;
 import clases.Usuario;
 import excepciones.ReservationNotFound;
 import interfaces.IFormaDePago;
@@ -38,7 +38,7 @@ class UsuarioTest {
 	void usuarioPoneEnAlquilerUnInmuebleTest() {
 		rodri.ponerEnAlquiler(departamento);
 		
-		verify(sitio, times(1)).agregarInmueble(departamento);
+		verify(sitio, times(1)).darDeAltaInmueble(departamento);
 	}
 
 	// TODO: PREGUNTAR POR EL PROTOCOLO DE ESTE MÉTODO
@@ -100,7 +100,7 @@ class UsuarioTest {
         MailServer mailServer = mock(MailServer.class);
         Mail mail = mock(Mail.class);
          
-        when(reserva.getUsuario()).thenReturn(martin);
+        when(reserva.getInquilino()).thenReturn(martin);
         when(mail.getDestinatario()).thenReturn(martin.getMail());
          
         rodri.aceptarReserva(reserva);
@@ -108,7 +108,7 @@ class UsuarioTest {
         String expected = "martin@unq.edu.ar";
         String actual = mail.getDestinatario();
          
-        verify(sitio, times(1)).aceptarReserva(reserva);
+        verify(sitio, times(1)).aprobarReserva(reserva);
         assertEquals(expected, actual);
         verify(mailServer, times(1));
         
