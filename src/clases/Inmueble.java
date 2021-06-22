@@ -2,6 +2,7 @@ package clases;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import interfaces.IVisualizable;
@@ -18,8 +19,8 @@ public class Inmueble implements IVisualizable {
 	private List<String> servicios;
 	private Integer capacidad;
 	private List<Foto> fotos;
-	private LocalDateTime horarioCheckIn;
-	private LocalDateTime horarioCheckOut;
+	private LocalTime horarioCheckIn;
+	private LocalTime horarioCheckOut;
 	private PoliticaCancelacion politicaCancelacion;
 	private List<String> formasDePagoAceptadas; // DEFINIR LA INTERFACE
 	private List<PrecioPeriodo> precios;
@@ -28,7 +29,7 @@ public class Inmueble implements IVisualizable {
 	
 	public Inmueble(Usuario propietario, String tipo, Double superficie, String pais, String ciudad,
 					String direccion, List<String> servicios, Integer capacidad, List<Foto> fotos,
-					LocalDateTime horarioCheckIn, LocalDateTime horarioCheckOut, PoliticaCancelacion politicaCancelacion,
+					LocalTime horarioCheckIn, LocalTime horarioCheckOut, PoliticaCancelacion politicaCancelacion,
 					List<String> formasDePagoAceptadas, List<PrecioPeriodo> precios) {
 		
 		this.propietario = propietario;
@@ -114,10 +115,10 @@ public class Inmueble implements IVisualizable {
 	public List<Foto> fotos() {
 		return this.fotos;
 	}
-	public LocalDateTime getHorarioCheckIn() {
+	public LocalTime getHorarioCheckIn() {
 		return this.horarioCheckIn;
 	}
-	public LocalDateTime getHorarioCheckOut() {
+	public LocalTime getHorarioCheckOut() {
 		return this.horarioCheckOut;
 	}
 	public Integer vecesAlquilado() {
@@ -137,14 +138,14 @@ public class Inmueble implements IVisualizable {
 		return this.precios;
 	}
 
+	public boolean estaOcupado() {
+		return this.getPropietario().getSitioInmuebles().estaOcupado(this);
+	}
+
 	@Override
 	public void visualizar() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public boolean estaOcupado() {
-		return this.getPropietario().getSitioInmuebles().estaOcupado(this);
-	}
-	
 }
