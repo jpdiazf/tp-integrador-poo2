@@ -2,6 +2,7 @@ package ar.edu.unq.sitioInmueble;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 
@@ -10,6 +11,9 @@ import clases.Inmueble;
 import clases.PoliticaCancelacion;
 import clases.Reserva;
 import clases.Usuario;
+import interfaces.ISuscriptorBajaDePrecio;
+import interfaces.ISuscriptorCancelacion;
+import interfaces.ISuscriptorReserva;
 import interfaces.IVisualizable;
 
 
@@ -17,19 +21,17 @@ public class SitioInmuebles {
 
 	
 	private HashSet<PoliticaCancelacion> politicasCancelacion = new HashSet<PoliticaCancelacion>();
-	private ArrayList<Reserva> reservas = new ArrayList<Reserva>();
 	private ArrayList<Inmueble> inmueblesDeAlta = new ArrayList<Inmueble>();
 	private ArrayList<String> tiposInmueble = new ArrayList<String>();
 	private ArrayList<String> serviciosInmueble = new ArrayList<String>();
 	private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
-	private IGraphicalUserInterface gui;
 	
-	
-	public SitioInmuebles(IGraphicalUserInterface gui) {
-		this.gui = gui;
-	}
-	
+	private HashMap<Entidad, ArrayList<String>> categoriasRankeables = new HashMap<Entidad, ArrayList<String>>();
+	private GestorDeNotificaciones gestorNotificaciones = new GestorDeNotificaciones(this);
+	private GestorDeReservas gestorReservas = new GestorDeReservas(this);
 
+	
+	
 	public HashSet<PoliticaCancelacion> getPoliticasCancelacion() {
 		return politicasCancelacion;
 	}
@@ -43,7 +45,7 @@ public class SitioInmuebles {
 	}
 
 	public ArrayList<Reserva> getReservas() {
-		return this.reservas;
+		return gestorReservas.getReservas();
 	}
 	
 	public ArrayList<Inmueble> getInmueblesDeAlta() {
@@ -54,7 +56,10 @@ public class SitioInmuebles {
 		return this.tiposInmueble;
 	}
 	
+	
+	
 	//ALTAS//
+	
 	
 	public void darDeAltaUsuario(Usuario usuario) {
 		usuarios.add(usuario);
@@ -76,12 +81,33 @@ public class SitioInmuebles {
 		this.inmueblesDeAlta.add(inmueble);
 	}
 	
+	
+	
+	//RESERVAS
+	
+	public void recibirReserva(Reserva reserva) throws Exception {
+		gestorReservas.recibirReserva(reserva);
+	}
+	
+	public void aprobarReserva(Reserva reserva) throws Exception{
+		gestorReservas.aprobarReserva(reserva);
+	}
+	
+	public void rechazarReserva(Reserva reserva) throws Exception{
+		gestorReservas.rechazarReserva(reserva);
+	}
+	
+	public void cancelarReserva(Reserva reserva) throws Exception{
+		gestorReservas.cancelarReserva(reserva);
+	}
+	
+	
 	//BÚSQUEDAS - VISUALIZACIONES //
 	
-	public void realizarBusqueda(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, Integer cantidadHuespedes, Double precioMinimo, Double precioMaximo){
+	
+	public ArrayList<Inmueble> realizarBusqueda(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, Integer cantidadHuespedes, Double precioMinimo, Double precioMaximo){
 		
 		ArrayList<Inmueble> inmueblesFiltrados = new ArrayList<Inmueble>();
-		//this.tiposInmueble.forEach(null);
 		
 		for(Inmueble inmueble:this.getInmueblesDeAlta()) {
 			if(inmueble.getCiudad() == ciudad && !this.hayReservaEn(inmueble, fechaEntrada, fechaSalida)) {
@@ -94,16 +120,14 @@ public class SitioInmuebles {
 		}
 		
 		if(precioMinimo != null) {
-			inmueblesFiltrados.removeIf(inmueble -> inmueble.getPrecioPorPeriodo(fechaEntrada, fechaSalida) > precioMinimo);
+			inmueblesFiltrados.removeIf(inmueble -> inmueble.getPrecioPorPeriodo(fechaEntrada, fechaSalida) < precioMinimo);
 		}
 		
 		if(precioMaximo != null) {
 			inmueblesFiltrados.removeIf(inmueble -> inmueble.getPrecioPorPeriodo(fechaEntrada, fechaSalida) > precioMaximo);
 		}
 		
-		//return inmueblesFiltrados;
-		
-		gui.mostrarEnPantalla(inmueblesFiltrados);
+		return inmueblesFiltrados;
 		
 	}
 	
@@ -116,55 +140,10 @@ public class SitioInmuebles {
 		return false;
 	}
 	
-	public void visualizar(IVisualizable visualizable) {
-		
-		//EXcepción si inmueble no está en pantalla.
-		//Agregado para User
-		gui.mostrarInformacion(visualizable);
-		
-	}
 	
-	
-	//RESERVAS//
-	/*
-	public void recibirReserva(Usuario inquilino, Inmueble inmueble, IFormaDePago formaDePago, LocalDate fechaEntrada, LocalDate fechaSalida) {
-		
-		Reserva reservaRealizada = new Reserva(inquilino, inmueble, formaDePago, fechaEntrada, fechaSalida); //puede notificar al propietario al instanciarse??
-		reservas.add(reservaRealizada);
-		
-		reservaRealizada.getInmueble().getPropietario().recibirReserva(reservaRealizada);; //raro
-		
-	}
-	*/
-	
-	public void recibirReserva(Reserva reserva) {
-		Reserva reservaRealizada = this.buscarReserva(reserva);
-		reservas.add(reservaRealizada);
-	}
-	
-	public void aprobarReserva(Reserva reserva) {
-		Reserva reservaAAprobar= this.buscarReserva(reserva);
-		reservaAAprobar.aprobar();
-		//reservaAAprobar.getInquilino().notificarAprobacion(reservaAAprobar);
-	}
-	
-	public void rechazarReserva(Reserva reserva) {
-		Reserva reservaARechazar= this.buscarReserva(reserva);
-		reservaARechazar.rechazar();
-		//reservaARechazar.getInquilino().notificarRechazo(reservaAAprobar);
-	}
-	
-	public void cancelarReserva(Reserva reserva) {
-		Reserva reservaACancelar = this.buscarReserva(reserva);
-		reservaACancelar.cancelar();
-		this.getReservas().remove(reservaACancelar);
-	}
-	
-	private Reserva buscarReserva(Reserva reserva) {
-		return this.getReservas().stream().filter(r -> r.equals(reserva)).findFirst().get();
-	}
 	
 	//LISTADOS DE GESTIÓN//
+	
 	
 	public ArrayList<Usuario> topTenInquilinosActivos() {
 		ArrayList<Usuario> usuarios = new ArrayList<Usuario>(this.usuarios); 
@@ -230,6 +209,33 @@ public class SitioInmuebles {
 		}
 		
 		return inmueblesAlquilados;
+	}
+	
+	
+	//SUSCRIPCIONES
+	
+	public void suscribirBajaDePrecio(Inmueble inmueble, ISuscriptorBajaDePrecio suscriptor) {
+		gestorNotificaciones.suscribirBajaDePrecio(inmueble, suscriptor); //PREGUNTAR
+	}
+	
+	public void desuscribirBajaDePrecio(ISuscriptorBajaDePrecio suscriptor) {
+		gestorNotificaciones.desuscribirBajaDePrecio(suscriptor); //PREGUNTAR
+	}
+	
+	public void suscribirCancelacionDeReserva(Reserva reserva, ISuscriptorCancelacion suscriptor) {
+		gestorNotificaciones.suscribirCancelacionDeReserva(reserva, suscriptor);
+	}
+	
+	public void desuscribirCancelacionDeReserva(Reserva reserva, ISuscriptorCancelacion suscriptor) {
+		gestorNotificaciones.desuscribirCancelacionDeReserva(reserva, suscriptor);
+	}
+	
+	public void suscribirNuevaReserva(Inmueble inmueble, ISuscriptorReserva suscriptor) {
+		gestorNotificaciones.suscribirNuevaReserva(inmueble, suscriptor);
+	}
+	
+	public void desuscribirNuevaReserva(Inmueble inmueble, ISuscriptorReserva suscriptor) {
+		gestorNotificaciones.desuscribirNuevaReserva(inmueble, suscriptor);
 	}
 	
 	
