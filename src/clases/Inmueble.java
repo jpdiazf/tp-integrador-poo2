@@ -148,4 +148,9 @@ public class Inmueble implements IVisualizable {
 		
 	}
 
+	public String getInformacion() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -123,6 +123,10 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public String getNombre() {
+		return nombre;
+	}
 	
 }
 

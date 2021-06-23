@@ -170,6 +170,7 @@ public class SitioInmuebles {
 		return inmuebles;
 	}
 	
+	//revisar
 	public boolean estaOcupado(Inmueble inmueble) {
 		LocalDate hoy = LocalDate.now();
 		
@@ -182,14 +183,17 @@ public class SitioInmuebles {
 		}
 			
 	}
+	//preguntar
 	
 	public boolean estaReservado(Inmueble inmueble) {
+		
 		for(Reserva reserva:this.getReservas()) {
 			if(reserva.getInmueble().equals(inmueble)) {
 				return true;
 			}
 		}
 		return false;
+		
 	}
 	
 	public Double tasaDeOcupacion() {

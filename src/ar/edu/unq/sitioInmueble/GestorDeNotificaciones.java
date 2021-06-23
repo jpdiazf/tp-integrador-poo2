@@ -16,9 +16,11 @@ public class GestorDeNotificaciones {
 
 	
 	private SitioInmuebles sitioGestion;
-	private SensorBajaDePrecio sensorBajasDePrecio = new SensorBajaDePrecio();
-	private SensorCancelacion sensorCancelaciones = new SensorCancelacion();
-	private SensorReserva sensorReservas = new SensorReserva();
+	
+	
+	private ArrayList<SensorBajaDePrecio> sensoresBajasDePrecio = new ArrayList<SensorBajaDePrecio>();
+	private ArrayList<SensorCancelacion> sensoresCancelaciones = new ArrayList<SensorCancelacion>();
+	private ArrayList<SensorReserva> sensoresReservas = new ArrayList<SensorReserva>();
 	
 	
 	public GestorDeNotificaciones(SitioInmuebles sitio) {
@@ -26,7 +28,9 @@ public class GestorDeNotificaciones {
 	}
 	
 	public void notificarBajaDePrecio(Inmueble inmueble, Double nuevoPrecio) {
-		sensorBajasDePrecio.updateBajaDePrecio(inmueble, nuevoPrecio);
+		for(SensorBajaDePrecio sensor:this.sensoresBajasDePrecio) {
+			sensor.updateBajaDePrecio(inmueble, nuevoPrecio);
+		}
 	}
 	
 	public void notificarCancelacionDeReserva(Reserva reserva) {

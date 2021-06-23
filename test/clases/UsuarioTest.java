@@ -13,6 +13,7 @@ import clases.Inmueble;
 import clases.MailServer;
 import clases.Rankeo;
 import clases.Usuario;
+import excepciones.EmailAdressNotFound;
 import excepciones.ReservationNotFound;
 import interfaces.IFormaDePago;
 
@@ -50,7 +51,7 @@ class UsuarioTest {
 	// }
     
 	@Test
-	void usuarioRealizaUnaReservaEnElSitioTest() {
+	void usuarioRealizaUnaReservaEnElSitioTest() throws Exception{
         Reserva reserva = mock(Reserva.class);
 		rodri.realizarReserva(reserva);
         
@@ -85,7 +86,7 @@ class UsuarioTest {
     }
 
     @Test
-    void rodriRecibeUnaReservaDeMartinTest() {
+    void rodriRecibeUnaReservaDeMartinTest() throws Exception{
     	Reserva reserva = mock(Reserva.class);
     	when(departamento.getPropietario()).thenReturn(rodri);
     	
@@ -95,7 +96,7 @@ class UsuarioTest {
     }
 
     @Test
-    void usuarioAceptaUnaReservaTest() {
+    void usuarioAceptaUnaReservaTest() throws Exception {
         Reserva reserva = mock(Reserva.class);
         MailServer mailServer = mock(MailServer.class);
         Mail mail = mock(Mail.class);

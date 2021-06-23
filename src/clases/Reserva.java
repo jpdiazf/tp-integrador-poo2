@@ -64,4 +64,8 @@ public class Reserva {
 	public IFormaDePago getFormaDePago() {
 		return this.formaDePago;
 	}
+
+	public Usuario getPropietario() {
+		return inmueble.getPropietario();
+	}
 }
