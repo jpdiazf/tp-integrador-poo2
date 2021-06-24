@@ -32,6 +32,10 @@ public class Reserva {
     	this.aceptada = true; //y podr� luego notificar al inquilino?
     }
     
+    public boolean estaAceptada() {
+    	return aceptada;
+    }
+    
     public void rechazar() {
     	this.aceptada = false; //y podr� luego notificar al inquilino?
     }

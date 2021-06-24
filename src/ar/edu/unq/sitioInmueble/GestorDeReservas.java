@@ -34,13 +34,14 @@ public class GestorDeReservas {
 	
 	public void aprobarReserva(Reserva reserva) throws Exception{
 		Reserva reservaAAprobar= this.buscarReserva(reserva);
-		this.validarReservaHacia(reserva, reserva.getPropietario());
+		this.validarAprobacion(reserva);
 		reservaAAprobar.aprobar();
 		//reservaAAprobar.getInquilino().notificarAprobacion(reservaAAprobar);
 	}
 	
 	public void rechazarReserva(Reserva reserva) throws Exception{
 		Reserva reservaARechazar= this.buscarReserva(reserva);
+		this.validarRechazo(reserva);
 		reservaARechazar.rechazar();
 		//reservaARechazar.getInquilino().notificarRechazo(reservaAAprobar);
 	}
@@ -83,7 +84,7 @@ public class GestorDeReservas {
 	
 	private void validarRealizacionReserva(Reserva reserva) throws Exception {
 		Inmueble inmueble = reserva.getInmueble();
-		if(!sitioGestion.getInmueblesDeAlta().contains(inmueble) || !inmueble.estaPublicadoPeriodo(reserva.getComienzo(), reserva.getFin())) {
+		if(!sitioGestion.estaDadoDeAlta(inmueble) || !inmueble.estaPublicadoPeriodo(reserva.getComienzo(), reserva.getFin())) {
 			throw new Exception("No se encuentra disponible para reservar el inmueble " + inmueble.getInformacion());
 		}
 	}
@@ -94,15 +95,15 @@ public class GestorDeReservas {
 		}
 	}
 	
-	private void validarReservaANombreDe(Reserva reserva, Usuario usuario) throws Exception {
-		if(!reserva.getInquilino().equals(usuario)) {
-			throw new Exception("La reserva no se encuentra a nombre de " + usuario.getNombre());
+	private void validarAprobacion(Reserva reserva) throws Exception {
+		if(reserva.estaAceptada()) {
+			throw new Exception("La reserva ya se encuentra aceptada");
 		}
 	}
 	
-	private void validarReservaHacia(Reserva reserva, Usuario usuario) throws Exception {
-		if(!reserva.getPropietario().equals(usuario)) {
-			throw new Exception("La reserva no es hacia" + usuario.getNombre());
+	private void validarRechazo(Reserva reserva) throws Exception {
+		if(!reserva.estaAceptada()) {
+			throw new Exception("La reserva ya se encuentra rechazada");
 		}
 	}
 	

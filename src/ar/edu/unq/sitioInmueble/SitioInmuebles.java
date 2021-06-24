@@ -233,8 +233,8 @@ public class SitioInmuebles {
 		
 	}
 	
-	public int getCantidadInmueblesAlquilados() {
-		int inmueblesAlquilados = 0;
+	public Double getCantidadInmueblesAlquilados() {
+		Double inmueblesAlquilados = 0d;
 		LocalDate hoy = LocalDate.now();
 		
 		for(Reserva reserva:this.getReservas()) {
@@ -308,5 +308,18 @@ public class SitioInmuebles {
 	public void notificarNuevaReserva(Reserva reserva) {
 		gestorNotificaciones.notificarNuevaReserva(reserva);
 	}
+	
+	
+	//AUXILIARES
+
+	public boolean estaDadoDeAlta(Inmueble inmueble) {
+		return this.getInmueblesDeAlta().contains(inmueble);
+	}
+	
+	
+	
+	
+	
+	
 	
 }
