@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import clases.*;
+import excepciones.EmailAdressNotFound;
 
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,9 @@ class SitioInmueblesTest {
 	private Usuario adan;
 	private Inmueble casita;
 	
+	private String categoriaRankInmueble;
+	private String categoriaRankInquilino;
+	private String categoriaRankPropietario;
 	
 	
 	@BeforeEach
@@ -96,6 +100,18 @@ class SitioInmueblesTest {
 		sitio.darDeAltaInmueble(casita);
 		
 		assertEquals(sitio.getInmueblesDeAlta().size(), 1);
+		
+		assertTrue(sitio.getCategoriasRankeables(Entidad.INMUEBLE).size() == 0);
+		assertTrue(sitio.getCategoriasRankeables(Entidad.INQUILINO).size() == 0);
+		assertTrue(sitio.getCategoriasRankeables(Entidad.PROPIETARIO).size() == 0);
+		
+		sitio.darDeAltaCategoriaPara(Entidad.INMUEBLE, categoriaRankInmueble);
+		sitio.darDeAltaCategoriaPara(Entidad.INQUILINO, categoriaRankInquilino);
+		sitio.darDeAltaCategoriaPara(Entidad.PROPIETARIO, categoriaRankPropietario);
+		
+		assertTrue(sitio.getCategoriasRankeables(Entidad.INMUEBLE).contains(categoriaRankInmueble));
+		assertTrue(sitio.getCategoriasRankeables(Entidad.INQUILINO).contains(categoriaRankInquilino));
+		assertTrue(sitio.getCategoriasRankeables(Entidad.PROPIETARIO).contains(categoriaRankPropietario));
 		
 	}
 	
@@ -212,7 +228,76 @@ class SitioInmueblesTest {
 	}
 	
 	
+	@Test
+	void testVisualizacionInmuebles() {
+		
+		
+		
+	}
 	
 	
+	@Test
+	void testRealizacionesReservas() throws Exception {
+		
+		//REALIZACIÓN EXITOSA
+		
+		LocalDate hoy = LocalDate.now();
+		LocalDate maniana = LocalDate.now().plusDays(1);
+		
+		Reserva reservaDemo = mock(Reserva.class);
+		
+		when(reservaDemo.getInmueble()).thenReturn(casita);
+		when(reservaDemo.getComienzo()).thenReturn(hoy);
+		when(reservaDemo.getFin()).thenReturn(maniana);
+		
+		sitio.darDeAltaInmueble(casita);
+		
+		when(casita.estaPublicadoPeriodo(hoy, maniana)).thenReturn(true);
+		
+		assertFalse(sitio.getGestorReservas().getReservas().contains(reservaDemo));
+		
+		sitio.recibirReserva(reservaDemo);
+		
+		assertTrue(sitio.getGestorReservas().getReservas().contains(reservaDemo));
+		
+		
+		//REALIZACIÓN CON ERROR
+		
+		Reserva reservaDemo2 = mock(Reserva.class);
+		Inmueble inmuebleDemo = mock(Inmueble.class);
+		
+		when(reservaDemo2.getInmueble()).thenReturn(inmuebleDemo);
+		when(reservaDemo2.getComienzo()).thenReturn(hoy);
+		when(reservaDemo2.getFin()).thenReturn(maniana);
+		
+		//¡no doy de alta el inmueble en el sitio!
+		
+		when(inmuebleDemo.estaPublicadoPeriodo(hoy, maniana)).thenReturn(true);
+		when(inmuebleDemo.getInformacion()).thenReturn("inmueble de prueba");
+		
+		Exception excepcion = assertThrows(Exception.class, () -> sitio.recibirReserva(reservaDemo2));
+		
+		assertEquals("No se encuentra disponible para reservar el inmueble " + inmuebleDemo.getInformacion(), excepcion.getMessage());
+		
+		
+		//doy de alta el inmueble, pero no se encuentra publicado para el período.
+		
+		sitio.darDeAltaInmueble(inmuebleDemo);
+		
+		when(inmuebleDemo.estaPublicadoPeriodo(hoy, maniana)).thenReturn(false);
+		
+		excepcion = assertThrows(Exception.class, () -> sitio.recibirReserva(reservaDemo2));
+		
+		assertEquals("No se encuentra disponible para reservar el inmueble " + inmuebleDemo.getInformacion(), excepcion.getMessage());
+		
+	}
+	
+	
+	@Test
+	void testAceptacionesReservas() {
+		
+		
+		
+	}
 
 }

@@ -11,6 +11,9 @@ import clases.Inmueble;
 import clases.PoliticaCancelacion;
 import clases.Reserva;
 import clases.Usuario;
+import interfaces.IListenerBajaDePrecio;
+import interfaces.IListenerCancelacion;
+import interfaces.IListenerReserva;
 import interfaces.ISuscriptorBajaDePrecio;
 import interfaces.ISuscriptorCancelacion;
 import interfaces.ISuscriptorReserva;
@@ -20,38 +23,35 @@ import interfaces.IVisualizable;
 public class SitioInmuebles {
 
 	
-	private HashSet<PoliticaCancelacion> politicasCancelacion = new HashSet<PoliticaCancelacion>();
-	private ArrayList<Inmueble> inmueblesDeAlta = new ArrayList<Inmueble>();
-	private ArrayList<String> tiposInmueble = new ArrayList<String>();
-	private ArrayList<String> serviciosInmueble = new ArrayList<String>();
-	private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+	private HashSet<PoliticaCancelacion> politicasCancelacion;
+	private ArrayList<Inmueble> inmueblesDeAlta;
+	private ArrayList<String> tiposInmueble;
+	private ArrayList<String> serviciosInmueble;
+	private ArrayList<Usuario> usuarios;
 	
-	private HashMap<Entidad, ArrayList<String>> categoriasRankeables = new HashMap<Entidad, ArrayList<String>>();
-	private GestorDeNotificaciones gestorNotificaciones = new GestorDeNotificaciones(this);
-	private GestorDeReservas gestorReservas = new GestorDeReservas(this);
+	private HashMap<Entidad, ArrayList<String>> categoriasRankeables;
+	private GestorDeNotificaciones gestorNotificaciones;
+	private GestorDeReservas gestorReservas;
 
 	
 	
-	public Double promedioPuntaje(Entidad entidad) {
+	public SitioInmuebles() {
+		super();
+		this.politicasCancelacion = new HashSet<PoliticaCancelacion>();
+		this.inmueblesDeAlta = new ArrayList<Inmueble>();
+		this.tiposInmueble = new ArrayList<String>();
+		this.serviciosInmueble = new ArrayList<String>();
+		this.usuarios = new ArrayList<Usuario>();
+		this.categoriasRankeables = new HashMap<Entidad, ArrayList<String>>();
 		
-		Double cantidad = 0d;
-		Double puntajeTotal = 0d;
+		categoriasRankeables.put(Entidad.INMUEBLE, new ArrayList<String>());
+		categoriasRankeables.put(Entidad.INQUILINO, new ArrayList<String>());
+		categoriasRankeables.put(Entidad.PROPIETARIO, new ArrayList<String>());
 		
-		for(Usuario usuario:usuarios) {
-			if(usuario.getEntidad() == entidad) {
-				cantidad++;
-				puntajeTotal += usuario.getGestorRankeos().getPromedioTotal();
-			}
-		}
-		if(cantidad == 0d) {
-            return 0d;
-        } else {
-        	return Math.floor((puntajeTotal / cantidad) * 100) / 100;
-        }
-		
+		this.gestorNotificaciones = new GestorDeNotificaciones(this);
+		this.gestorReservas = new GestorDeReservas(this);
 	}
-	
-	
+
 	public HashSet<PoliticaCancelacion> getPoliticasCancelacion() {
 		return politicasCancelacion;
 	}
@@ -76,6 +76,17 @@ public class SitioInmuebles {
 		return this.tiposInmueble;
 	}
 	
+	public ArrayList<String> getCategoriasRankeables(Entidad entidad) {
+		return categoriasRankeables.get(entidad);
+	}
+	
+	public GestorDeReservas getGestorReservas() {
+		return this.gestorReservas;
+	}
+	
+	public GestorDeNotificaciones getGestorNotificaciones() {
+		return this.gestorNotificaciones;
+	}
 	
 	
 	//ALTAS//
@@ -83,7 +94,7 @@ public class SitioInmuebles {
 	
 	public void darDeAltaUsuario(Usuario usuario) {
 		usuarios.add(usuario);
-		gestorNotificaciones.suscribirNuevaReserva(usuario);
+	//	gestorNotificaciones.suscribirNuevaReserva(usuario);
 	}
 	
 	public void darDeAltaTipoInmueble(String tipoInmueble) {
@@ -102,7 +113,9 @@ public class SitioInmuebles {
 		this.inmueblesDeAlta.add(inmueble);
 	}
 	
-	
+	public void darDeAltaCategoriaPara(Entidad entidad, String categoria) {
+		this.categoriasRankeables.get(entidad).add(categoria);
+	}
 	
 	//RESERVAS
 	
@@ -191,7 +204,7 @@ public class SitioInmuebles {
 		return inmuebles;
 	}
 	
-	//revisar
+
 	public boolean estaOcupado(Inmueble inmueble) {
 		LocalDate hoy = LocalDate.now();
 		
@@ -204,7 +217,7 @@ public class SitioInmuebles {
 		}
 			
 	}
-	//preguntar
+
 	
 	public boolean estaReservado(Inmueble inmueble) {
 		
@@ -236,34 +249,66 @@ public class SitioInmuebles {
 		return inmueblesAlquilados;
 	}
 	
+	/*
+	public Double promedioPuntaje(Entidad entidad) {
+		
+		Double cantidad = 0d;
+		Double puntajeTotal = 0d;
+		
+		for(Usuario usuario:usuarios) {
+			if(usuario.getEntidad() == entidad) {
+				cantidad++;
+				puntajeTotal += usuario.getGestorRankeos().getPromedioTotal();
+			}
+		}
+		if(cantidad == 0d) {
+            return 0d;
+        } else {
+        	return Math.floor((puntajeTotal / cantidad) * 100) / 100;
+        }
+		
+	}
+	*/
+	
 	
 	//SUSCRIPCIONES
 	
-	public void suscribirBajaDePrecio(Inmueble inmueble, ISuscriptorBajaDePrecio suscriptor) {
-		gestorNotificaciones.suscribirBajaDePrecio(inmueble, suscriptor); //PREGUNTAR
+	public void suscribirBajaDePrecio(Inmueble inmueble, IListenerBajaDePrecio listener) {
+		gestorNotificaciones.suscribirBajaDePrecio(inmueble, listener); 
 	}
 	
-	public void desuscribirBajaDePrecio(ISuscriptorBajaDePrecio suscriptor) {
-		gestorNotificaciones.desuscribirBajaDePrecio(suscriptor); //PREGUNTAR
+	public void desuscribirBajaDePrecio(Inmueble inmueble, IListenerBajaDePrecio listener) {
+		gestorNotificaciones.desuscribirBajaDePrecio(inmueble, listener);
 	}
 	
-	public void suscribirCancelacionDeReserva(Reserva reserva, ISuscriptorCancelacion suscriptor) {
-		gestorNotificaciones.suscribirCancelacionDeReserva(reserva, suscriptor);
+	public void suscribirCancelacionDeReserva(Reserva reserva, IListenerCancelacion listener) {
+		gestorNotificaciones.suscribirCancelacion(reserva.getInmueble(), listener);
 	}
 	
-	public void desuscribirCancelacionDeReserva(Reserva reserva, ISuscriptorCancelacion suscriptor) {
-		gestorNotificaciones.desuscribirCancelacionDeReserva(reserva, suscriptor);
+	public void desuscribirCancelacionDeReserva(Reserva reserva, IListenerCancelacion listener) {
+		gestorNotificaciones.desuscribirCancelacion(reserva.getInmueble(), listener);
 	}
 	
-	public void suscribirNuevaReserva(ISuscriptorReserva suscriptor) {
-		gestorNotificaciones.suscribirNuevaReserva(suscriptor);
+	public void suscribirNuevaReserva(Inmueble inmueble, IListenerReserva listener) {
+		gestorNotificaciones.suscribirReserva(inmueble, listener);
 	}
 	
-	public void desuscribirNuevaReserva(Inmueble inmueble, ISuscriptorReserva suscriptor) {
-		gestorNotificaciones.desuscribirNuevaReserva(inmueble, suscriptor);
+	public void desuscribirNuevaReserva(Inmueble inmueble, IListenerReserva listener) {
+		gestorNotificaciones.desuscribirReserva(inmueble, listener);
 	}
 	
-	public void updateNuevaReserva(Reserva reserva) {
+	
+	//NOTIFICACIONES
+	
+	public void notificarBajaDePrecio(Inmueble inmueble, Double nuevoPrecio) {
+		gestorNotificaciones.notificarBajaDePrecio(inmueble, nuevoPrecio);
+	}
+	
+	public void notificarCancelacionDeReserva(Reserva reserva) {
+		gestorNotificaciones.notificarCancelacionDeReserva(reserva);
+	}
+	
+	public void notificarNuevaReserva(Reserva reserva) {
 		gestorNotificaciones.notificarNuevaReserva(reserva);
 	}
 	

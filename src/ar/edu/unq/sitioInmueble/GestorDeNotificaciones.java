@@ -4,13 +4,16 @@ import java.util.ArrayList;
 
 import clases.Inmueble;
 import clases.Reserva;
-import clases.SensorBajaDePrecio;
-import clases.SensorCancelacion;
-import clases.SensorReserva;
 import clases.Usuario;
+import interfaces.IListenerBajaDePrecio;
+import interfaces.IListenerCancelacion;
+import interfaces.IListenerReserva;
 import interfaces.ISuscriptorBajaDePrecio;
 import interfaces.ISuscriptorCancelacion;
 import interfaces.ISuscriptorReserva;
+import sensores.SensorBajaDePrecio;
+import sensores.SensorCancelacion;
+import sensores.SensorReserva;
 
 public class GestorDeNotificaciones {
 
@@ -18,56 +21,62 @@ public class GestorDeNotificaciones {
 	private SitioInmuebles sitioGestion;
 	
 	
-	private ArrayList<SensorBajaDePrecio> sensoresBajasDePrecio = new ArrayList<SensorBajaDePrecio>();
-	private ArrayList<SensorCancelacion> sensoresCancelaciones = new ArrayList<SensorCancelacion>();
-	private ArrayList<SensorReserva> sensoresReservas = new ArrayList<SensorReserva>();
+	private SensorBajaDePrecio sensorBajaDePrecio;
+	private SensorCancelacion sensorCancelacion;
+	private SensorReserva sensorReserva;
 	
 	
 	public GestorDeNotificaciones(SitioInmuebles sitio) {
 		this.sitioGestion = sitio;
+		this.sensorBajaDePrecio = new SensorBajaDePrecio(this);
+		this.sensorCancelacion = new SensorCancelacion(this);
+		this.sensorReserva = new SensorReserva(this);
 	}
 	
+	public SitioInmuebles getSitio() {
+		return this.sitioGestion;
+	}
+	
+	
+	//SUSCRIPCIONES
+	
+	public void suscribirBajaDePrecio(Inmueble inmueble, IListenerBajaDePrecio listener) {
+		sensorBajaDePrecio.addSensorListener(inmueble, listener); //PREGUNTAR
+	}
+	
+	public void desuscribirBajaDePrecio(Inmueble inmueble, IListenerBajaDePrecio listener) {
+		sensorBajaDePrecio.removeSensorListener(inmueble, listener); //PREGUNTAR
+	}
+	
+	public void suscribirCancelacion(Inmueble inmueble, IListenerCancelacion listener) {
+		sensorCancelacion.addSensorListener(inmueble, listener); //PREGUNTAR
+	}
+	
+	public void desuscribirCancelacion(Inmueble inmueble, IListenerCancelacion listener) {
+		sensorCancelacion.removeSensorListener(inmueble, listener); //PREGUNTAR
+	}
+	
+	public void suscribirReserva(Inmueble inmueble, IListenerReserva listener) {
+		sensorReserva.addSensorListener(inmueble, listener);
+	}
+	
+	public void desuscribirReserva(Inmueble inmueble, IListenerReserva listener) {
+		sensorReserva.removeSensorListener(inmueble, listener);
+	}
+	
+	
+	//NOTIFICACIONES
+	
 	public void notificarBajaDePrecio(Inmueble inmueble, Double nuevoPrecio) {
-		for(SensorBajaDePrecio sensor:this.sensoresBajasDePrecio) {
-			sensor.updateBajaDePrecio(inmueble, nuevoPrecio);
-		}
+		sensorBajaDePrecio.notificarBajaDePrecio(inmueble, nuevoPrecio);
 	}
 	
 	public void notificarCancelacionDeReserva(Reserva reserva) {
-		for(SensorCancelacion sensor:sensoresCancelaciones) {
-			sensor.updateCancelacion(reserva);
-		}
+		sensorCancelacion.notificarCancelacion(reserva);
 	}
 	
 	public void notificarNuevaReserva(Reserva reserva) {
-		for(SensorReserva sensor:this.sensoresReservas) {
-			sensor.updateReservas(reserva);
-		}
-	}
-	
-	public void suscribirBajaDePrecio(Inmueble inmueble, ISuscriptorBajaDePrecio suscriptor) {
-		sensorBajasDePrecio.subscribe(inmueble, suscriptor); //PREGUNTAR
-	}
-	
-	public void desuscribirBajaDePrecio(ISuscriptorBajaDePrecio suscriptor) {
-		sensorBajasDePrecio.unsubscribe(suscriptor); //PREGUNTAR
-	}
-	
-	public void suscribirCancelacionDeReserva(Reserva reserva, ISuscriptorCancelacion suscriptor) {
-		sensorCancelaciones.subscribe(reserva, suscriptor);
-	}
-	
-	public void desuscribirCancelacionDeReserva(Reserva reserva, ISuscriptorCancelacion suscriptor) {
-		sensorCancelaciones.unsubscribe(reserva, suscriptor);
-	}
-	
-	public void suscribirNuevaReserva(ISuscriptorReserva suscriptor) {
-		SensorReserva sensorActual = new SensorReserva(suscriptor);
-		suscriptor.agregarSensorReserva(sensorActual);
-	}
-	
-	public void desuscribirNuevaReserva(Inmueble inmueble, ISuscriptorReserva suscriptor) {
-		sensorReservas.unsubscribe(inmueble, suscriptor);
+		sensorReserva.notificarReserva(reserva.getInmueble());
 	}
 	
 	

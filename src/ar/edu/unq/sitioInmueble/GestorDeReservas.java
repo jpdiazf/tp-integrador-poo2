@@ -21,9 +21,13 @@ public class GestorDeReservas {
 		return reservas;
 	}
 	
+	public SitioInmuebles getSitioGestion() {
+		return this.sitioGestion;
+	}
+	
 	public void recibirReserva(Reserva reserva) throws Exception {
 		this.validarRealizacionReserva(reserva);
-		this.sitioGestion.updateNuevaReserva(reserva);
+		this.getSitioGestion().notificarNuevaReserva(reserva);
 		reservas.add(reserva);
 	}
 	

@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test;
 
 import clases.Inmueble;
 import clases.Reserva;
-import clases.SensorBajaDePrecio;
-import clases.SensorCancelacion;
-import clases.SensorReserva;
 import clases.Usuario;
 import interfaces.ISuscriptorBajaDePrecio;
 import interfaces.ISuscriptorCancelacion;
+import sensores.SensorBajaDePrecio;
+import sensores.SensorCancelacion;
+import sensores.SensorReserva;
 
 class AlertasTestCase {
 	
