@@ -1,8 +1,7 @@
 package clases;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.mockito.ArgumentMatchers;
 
 import ar.edu.unq.sitioInmueble.SitioInmuebles;
 import excepciones.EmailAdressNotFound;
@@ -40,6 +39,10 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
     public List<Reserva> getReservasRecibidas() {
         return this.reservasRecibidas;
     }
+    
+    public void realizarBusqueda(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, int cantidadHuespedes, double precioMinimo, double precioMaximo) {
+    	inmueblesPreferidos = this.sitioInmuebles.realizarBusqueda(ciudad, fechaEntrada, fechaSalida, cantidadHuespedes, precioMinimo, precioMaximo);
+    }
 
 	public void ponerEnAlquiler(Inmueble inmueble) {
 		this.sitioInmuebles.darDeAltaInmueble(inmueble);
@@ -71,6 +74,10 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 		this.reservasRealizadas.remove(reserva);
 	}
 	
+	public String getNombre() {
+		return nombre;
+	}
+	
     public List<Rankeo> getRankeos() {
 		return this.rankeos;
 	}
@@ -92,6 +99,7 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 		this.validarRechazo(reserva);
 		
 		sitioInmuebles.rechazarReserva(reserva);
+		reservasRecibidas.remove(reserva);
 	}
 	
 	public void enviarMail(Mail mail) throws EmailAdressNotFound {
@@ -107,13 +115,10 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 	}
 	
 	// TODO: agregar métodos de suscripción.
-	
-	// TODO Implementar getters
 
 	@Override
 	public void visualizar() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	public void recibirMail(Mail mail) {
@@ -124,6 +129,22 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 		return this.mailsRecibidos;
 	}	
 	
+	public String getNroTelefono() {
+		return this.nroTelefono;
+	}
+	
+	public MailServer getMailServer() {
+		return this.mailServer;
+	}
+	
+	public List<Reserva> getReservasRealizadas() {
+		return this.reservasRealizadas;
+	}
+	
+	public List<Inmueble> getInmueblesPreferidos() {
+		return this.inmueblesPreferidos;
+	}
+
 	// Privates
 	private void validarCancelacion(Reserva reserva) throws Exception {
 		if(!this.reservasRealizadas.contains(reserva)) {
@@ -136,18 +157,4 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 			throw new ReservationNotFound("No se puede rechazar una Reserva no realizada");
 		}
 	}
-
-	public String getNombre() {
-		return nombre;
-	}
-	
 }
-
-
-
-
-
-
-
-
-
