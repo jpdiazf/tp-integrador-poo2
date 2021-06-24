@@ -33,8 +33,7 @@ class SitioInmueblesTest {
 	private String servicioInmueble1;
 	private String servicioInmueble2;
 	private String servicioInmueble3;
-	
-	private IGraphicalUserInterface gui;
+
 	private Usuario adan;
 	private Inmueble casita;
 	
@@ -43,11 +42,11 @@ class SitioInmueblesTest {
 	@BeforeEach
 	void setUp() {
 		
-		gui = mock(IGraphicalUserInterface.class);
 		adan = mock(Usuario.class);
 		casita = mock(Inmueble.class);
+		when(casita.getCiudad()).thenReturn("Quilmes");
 		
-		sitio = new SitioInmuebles(gui);
+		sitio = new SitioInmuebles();
 		
 		p1 = mock(PoliticaCancelacion.class);
 		p2 = mock(PoliticaCancelacion.class);
@@ -100,19 +99,120 @@ class SitioInmueblesTest {
 		
 	}
 	
+	
 	@Test
-	void BusquedaDeInmuebles() {
+	void testBusquedaDeInmueblePorCiudad() {
 		
 		sitio.darDeAltaUsuario(adan);
 		sitio.darDeAltaInmueble(casita);
 		
-		when(casita.getCiudad()).thenReturn("Quilmes");
+		ArrayList<Inmueble> inmueblesFiltrados = new ArrayList<Inmueble>();
 		
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", LocalDate.now(), LocalDate.now().plusDays(2), null, null, null);
 		
-		sitio.realizarBusqueda("Quilmes", LocalDate.now(), LocalDate.now().plusDays(2), null, null, null);
+		assertTrue(inmueblesFiltrados.contains(casita));
 		
-		verify(gui, times(1)).mostrarEnPantalla();
+		//NUEVO INMUEBLE
+		Inmueble habitacion = mock(Inmueble.class);
+		
+		sitio.darDeAltaInmueble(habitacion);
+		when(habitacion.getCiudad()).thenReturn("Quilmes");
+		
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", LocalDate.now(), LocalDate.now().plusDays(3), null, null, null);
+		
+		assertTrue(inmueblesFiltrados.contains(habitacion));
+		
+		assertEquals(inmueblesFiltrados.size(), 2);
+		
+		//NUEVO INMUEBLE
+		Inmueble quincho = mock(Inmueble.class);
+		when(quincho.getCiudad()).thenReturn("Berazategui");
+		
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", LocalDate.now(), LocalDate.now().plusDays(4), null, null, null);
+		
+		assertFalse(inmueblesFiltrados.contains(quincho));
 		
 	}
+	
+	@Test
+	void testBusquedaDeInmueblesPorParametrosOpcionales() {
+		
+		Inmueble quincho = mock(Inmueble.class);
+		Inmueble habitacion = mock(Inmueble.class);
+		
+		sitio.darDeAltaUsuario(adan);
+		sitio.darDeAltaInmueble(casita);
+		sitio.darDeAltaInmueble(habitacion);
+		sitio.darDeAltaInmueble(quincho);
+		
+		when(habitacion.getCiudad()).thenReturn("Quilmes");
+		when(quincho.getCiudad()).thenReturn("Berazategui");
+		
+		ArrayList<Inmueble> inmueblesFiltrados = new ArrayList<Inmueble>();
+		
+		when(casita.getCapacidad()).thenReturn(6);
+		when(habitacion.getCapacidad()).thenReturn(2);
+		when(quincho.getCapacidad()).thenReturn(20);
+		
+		LocalDate hoy = LocalDate.now();
+		LocalDate mañana = LocalDate.now().plusDays(1);
+		
+		when(casita.getPrecioPorPeriodo(hoy, mañana)).thenReturn(1000d);
+		when(habitacion.getPrecioPorPeriodo(hoy, mañana)).thenReturn(500d);
+		when(quincho.getPrecioPorPeriodo(hoy, mañana)).thenReturn(2500d);
+		
+		//BÚSQUEDA CANTIDAD HUÉSPEDES
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, 6, null, null);
+		//habitación es de Quilmes y está disponible, ¡pero sólo alberga 2 personas! (quincho es de Berazategui)
+		assertTrue(inmueblesFiltrados.contains(casita) && !inmueblesFiltrados.contains(habitacion));
+		
+		//BÚSQUEDA PRECIO MÍNIMO
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, null, 2000d, null); 
+		//casa y habitación son de Quilmes y están disponibles, ¡pero sus precios no superan al mínimo! (quincho es de Berazategui)
+		assertEquals(inmueblesFiltrados.size(), 0);
+		
+		//BÚSQUEDA PRECIO MÁXIMO
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, null, null, 800d);
+		//casa es de Quilmes y está disponible, ¡pero el precio supera al máximo!
+		assertTrue(inmueblesFiltrados.contains(habitacion) && !inmueblesFiltrados.contains(casita));
+		
+		
+		//NUEVOS INMUEBLES
+		Inmueble depto = mock(Inmueble.class);
+		Inmueble cabania = mock(Inmueble.class);
+		
+		when(depto.getCiudad()).thenReturn("Quilmes");
+		when(cabania.getCiudad()).thenReturn("Berazategui");
+		
+		when(depto.getCapacidad()).thenReturn(4);
+		when(cabania.getCapacidad()).thenReturn(8);
+		
+		when(depto.getPrecioPorPeriodo(hoy, mañana)).thenReturn(1500d);
+		when(cabania.getPrecioPorPeriodo(hoy, mañana)).thenReturn(2000d);
+		
+		sitio.darDeAltaInmueble(depto);
+		sitio.darDeAltaInmueble(cabania);
+		
+		/**
+		 * Hasta ahora, los inmuebles dados de alta:
+		 * Quilmes -> (casita, $1000, 6pers), (habitacion, $500, 2pers), (depto, $1500, 4pers)
+		 * Berazategui -> (quincho, $2500, 20pers), (cabania, $2000, 8pers)
+		 */
+		
+		//BÚSQUEDAS TOTALES
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, 4, 1000d, 1400d);
+		//habitacion es de Quilmes pero sólo admite 2 personas; depto es de quilmes pero supera el precio máximo de $1400
+		assertTrue(inmueblesFiltrados.contains(casita) && inmueblesFiltrados.size() == 1);
+		
+		inmueblesFiltrados = sitio.realizarBusqueda("Berazategui", hoy, mañana, 8, 2000d, 2500d);
+		//ambos inmuebles de Berazategui cumplen con cada parámetro
+		assertTrue(inmueblesFiltrados.contains(quincho) && inmueblesFiltrados.contains(cabania) && inmueblesFiltrados.size() == 2);
+		
+		
+	}
+	
+	
+	
+	
 
 }

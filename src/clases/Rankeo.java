@@ -1,4 +1,5 @@
 package clases;
+import java.util.List;
 import java.util.Map;
 
 import interfaces.IRankeable;
@@ -26,6 +27,10 @@ public class Rankeo {
     private void validarRankeo() {
         //TODO
     }
+
+	public Map<String, Integer> getCategorias() {
+		return this.categorias;
+	}
 
 
 }

@@ -51,7 +51,7 @@ class UsuarioTest {
 	}
     
 	@Test
-	void usuarioRealizaUnaReservaEnElSitioTest() {
+	void usuarioRealizaUnaReservaEnElSitioTest() throws Exception{
         Reserva reserva = mock(Reserva.class);
 		rodri.realizarReserva(reserva);
         
@@ -86,7 +86,7 @@ class UsuarioTest {
     }
 
     @Test
-    void rodriRecibeUnaReservaDeMartinTest() {
+    void rodriRecibeUnaReservaDeMartinTest() throws Exception{
     	Reserva reserva = mock(Reserva.class);
     	when(departamento.getPropietario()).thenReturn(rodri);
     	

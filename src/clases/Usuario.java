@@ -136,6 +136,10 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 			throw new ReservationNotFound("No se puede rechazar una Reserva no realizada");
 		}
 	}
+
+	public String getNombre() {
+		return nombre;
+	}
 	
 }
 
