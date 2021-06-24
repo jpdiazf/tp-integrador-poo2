@@ -45,7 +45,7 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 		this.sitioInmuebles.darDeAltaInmueble(inmueble);
 	}
     
-	public void realizarReserva(Reserva reserva) {
+	public void realizarReserva(Reserva reserva) throws Exception {
         sitioInmuebles.recibirReserva(reserva);
         this.reservasRealizadas.add(reserva);
     }
@@ -79,7 +79,7 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
         visualizable.visualizar();
     }
 
-	public void aceptarReserva(Reserva reserva) throws EmailAdressNotFound {        
+	public void aceptarReserva(Reserva reserva) throws Exception {        
 		String remitente = this.direccionMail;
 		String destino = reserva.getInquilino().getMail();
         Mail mail = new Mail(remitente, destino, "Aceptación de Reserva", "Se aceptó su reserva. Se adjunta a continuación", reserva);
