@@ -1,16 +1,10 @@
 package ar.edu.unq.sitioInmueble;
 
-import java.util.ArrayList;
-
 import clases.Inmueble;
 import clases.Reserva;
-import clases.Usuario;
 import interfaces.IListenerBajaDePrecio;
 import interfaces.IListenerCancelacion;
 import interfaces.IListenerReserva;
-import interfaces.ISuscriptorBajaDePrecio;
-import interfaces.ISuscriptorCancelacion;
-import interfaces.ISuscriptorReserva;
 import sensores.SensorBajaDePrecio;
 import sensores.SensorCancelacion;
 import sensores.SensorReserva;
@@ -20,17 +14,14 @@ public class GestorDeNotificaciones {
 	
 	private SitioInmuebles sitioGestion;
 	
-	
 	private SensorBajaDePrecio sensorBajaDePrecio;
 	private SensorCancelacion sensorCancelacion;
 	private SensorReserva sensorReserva;
 	
-	
 	public GestorDeNotificaciones(SitioInmuebles sitio) {
-		this.sitioGestion = sitio;
-		this.sensorBajaDePrecio = new SensorBajaDePrecio(this);
-		this.sensorCancelacion = new SensorCancelacion(this);
-		this.sensorReserva = new SensorReserva(this);
+		this.sensorBajaDePrecio = new SensorBajaDePrecio();
+		this.sensorCancelacion = new SensorCancelacion();
+		this.sensorReserva = new SensorReserva();
 	}
 	
 	public SitioInmuebles getSitio() {
@@ -41,19 +32,19 @@ public class GestorDeNotificaciones {
 	//SUSCRIPCIONES
 	
 	public void suscribirBajaDePrecio(Inmueble inmueble, IListenerBajaDePrecio listener) {
-		sensorBajaDePrecio.addSensorListener(inmueble, listener); //PREGUNTAR
+		sensorBajaDePrecio.addSensorListener(inmueble, listener); 
 	}
 	
 	public void desuscribirBajaDePrecio(Inmueble inmueble, IListenerBajaDePrecio listener) {
-		sensorBajaDePrecio.removeSensorListener(inmueble, listener); //PREGUNTAR
+		sensorBajaDePrecio.removeSensorListener(inmueble, listener); 
 	}
 	
 	public void suscribirCancelacion(Inmueble inmueble, IListenerCancelacion listener) {
-		sensorCancelacion.addSensorListener(inmueble, listener); //PREGUNTAR
+		sensorCancelacion.addSensorListener(inmueble, listener); 
 	}
 	
 	public void desuscribirCancelacion(Inmueble inmueble, IListenerCancelacion listener) {
-		sensorCancelacion.removeSensorListener(inmueble, listener); //PREGUNTAR
+		sensorCancelacion.removeSensorListener(inmueble, listener); 
 	}
 	
 	public void suscribirReserva(Inmueble inmueble, IListenerReserva listener) {

@@ -29,15 +29,15 @@ public class Reserva {
     }
     
     public void aprobar() {
-    	this.aceptada = true; //y podrá luego notificar al inquilino?
+    	this.aceptada = true; //y podrï¿½ luego notificar al inquilino?
     }
     
     public void rechazar() {
-    	this.aceptada = false; //y podrá luego notificar al inquilino?
+    	this.aceptada = false; //y podrï¿½ luego notificar al inquilino?
     }
     
     public void cancelar() {
-    	Double montoAPagar = this.getInmueble().getPoliticaCancelacion().montoCancelacion(this, LocalDate.now());
+    	Double montoAPagar = this.getInmueble().getPoliticaCancelacion().valor(this);
     	this.getFormaDePago().pagar(montoAPagar, this.getInmueble().getPropietario().getSitioInmuebles()); //REVER (PAGAR AL SITIO O AL PROPIETARIO???)
     }
 

@@ -29,7 +29,7 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 		this.direccionMail = direccionMail;
 		this.nroTelefono = nroTelefono;
         this.mailServer = mailServer;
-        this.inmueblesAlquiladosInquilino = 0; //sumará al alquilar...
+        this.inmueblesAlquiladosInquilino = 0; //sumarï¿½ al alquilar...
 	}
 
 	public String getMail() {
@@ -63,7 +63,7 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 
 	public void recibirReserva(Reserva reserva) {
 		// TODO verificar que explote.
-		// NO ME ACUERDO QUÉ SIGNIFICA ESTO
+		// NO ME ACUERDO QUï¿½ SIGNIFICA ESTO
 		this.reservasRecibidas.add(reserva);
 	}
 	
@@ -89,7 +89,7 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 	public void aceptarReserva(Reserva reserva) throws Exception {        
 		String remitente = this.direccionMail;
 		String destino = reserva.getInquilino().getMail();
-        Mail mail = new Mail(remitente, destino, "Aceptación de Reserva", "Se aceptó su reserva. Se adjunta a continuación", reserva);
+        Mail mail = new Mail(remitente, destino, "Aceptaciï¿½n de Reserva", "Se aceptï¿½ su reserva. Se adjunta a continuaciï¿½n", reserva);
         
         this.sitioInmuebles.aprobarReserva(reserva);
         this.enviarMail(mail);
@@ -114,7 +114,7 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 		return this.sitioInmuebles;
 	}
 	
-	// TODO: agregar métodos de suscripción.
+	// TODO: agregar mï¿½todos de suscripciï¿½n.
 
 	@Override
 	public void visualizar() {

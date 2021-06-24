@@ -1,7 +1,9 @@
 package interfaces;
 
+import clases.Reserva;
+
 public interface IListenerReserva {
 
-	public void update(String message);
+	public void recibirReserva(Reserva reserva);
 	
 }

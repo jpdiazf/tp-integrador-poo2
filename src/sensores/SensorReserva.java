@@ -1,64 +1,36 @@
 package sensores;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-import ar.edu.unq.sitioInmueble.GestorDeNotificaciones;
 import clases.Inmueble;
+import clases.Reserva;
 import interfaces.IListenerReserva;
-import interfaces.ISuscriptorReserva;
-/*
-public class SensorReserva {
-
-	private ISuscriptorReserva suscriptor;
-	
-	public SensorReserva(ISuscriptorReserva suscriptor) {
-		this.suscriptor = suscriptor;
-	}
-	
-	public void updateReservas(Reserva reserva) {
-		if(reserva.getInmueble().getPropietario().equals(this.suscriptor)) {
-			this.suscriptor.recibirReserva(reserva);
-		}
-	}
-
-}
-*/
 
 public class SensorReserva {
 	
+	private List<IListenerReserva> listeners;
 	
-	private GestorDeNotificaciones miGestor;
-	private HashMap<Inmueble, ArrayList<IListenerReserva>> listeners;
-	
-	
-	public SensorReserva(GestorDeNotificaciones gestor) {
-		this.miGestor = gestor;
-		this.listeners = new HashMap<Inmueble, ArrayList<IListenerReserva>>();
+	public SensorReserva() {
+		this.listeners = new ArrayList<IListenerReserva>();
 	}
 	
-	
-	public HashMap<Inmueble, ArrayList<IListenerReserva>> getListeners() {
-		return this.listeners;
-	}
-	
-	
-	public void addSensorListener(Inmueble inmueble, IListenerReserva listener) {
-		if(!this.getListeners().containsKey(inmueble)) {
-			this.getListeners().put(inmueble, new ArrayList<IListenerReserva>());
+
+	public void addSensorListener(IListenerReserva listener) {
+		if(this.listeners.indexOf(listener) == -1) {
+			this.listeners.add(listener);
 		}
-		this.getListeners().get(inmueble).add(listener);
 	}
 
 	public void removeSensorListener(Inmueble inmueble, IListenerReserva listener) {
-		if(this.getListeners().containsKey(inmueble)) {
-			this.getListeners().get(inmueble).remove(listener);
+		if(this.listeners.indexOf(listener) != -1) {
+			this.listeners.remove(this.listeners.indexOf(listener));
 		}
 	}
 	
-	public void notificarReserva(Inmueble inmueble) {
-		if(this.getListeners().containsKey(inmueble)) {
-			for (IListenerReserva listener : this.getListeners().get(inmueble)) {
-				listener.update("El/la " + inmueble.getTipo() + " que te interesa fue reservado");
+	public void notificarReserva(Reserva reserva) {
+		for (IListenerReserva listener : this.listeners) {
+			if (reserva.getInmueble().getPropietario() == listener) {
+				listener.recibirReserva(reserva);
 			}
 		}
 	}
