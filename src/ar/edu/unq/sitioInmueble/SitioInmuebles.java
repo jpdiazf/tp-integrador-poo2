@@ -12,9 +12,6 @@ import clases.Usuario;
 import interfaces.IListenerBajaDePrecio;
 import interfaces.IListenerCancelacion;
 import interfaces.IListenerReserva;
-import interfaces.ISuscriptorBajaDePrecio;
-import interfaces.ISuscriptorCancelacion;
-import interfaces.ISuscriptorReserva;
 import interfaces.IVisualizable;
 
 
@@ -241,7 +238,7 @@ public class SitioInmuebles {
 		LocalDate hoy = LocalDate.now();
 		
 		for(Reserva reserva:this.getReservas()) {
-			if(hoy.isAfter(reserva.getComienzo()) && hoy.isBefore(reserva.getFin())) {
+			if(hoy.isAfter(reserva.getComienzo())) {
 				inmueblesAlquilados++;
 			}
 		}
@@ -289,12 +286,12 @@ public class SitioInmuebles {
 		gestorNotificaciones.desuscribirCancelacion(reserva.getInmueble(), listener);
 	}
 	
-	public void suscribirNuevaReserva(Inmueble inmueble, IListenerReserva listener) {
-		gestorNotificaciones.suscribirReserva(inmueble, listener);
+	public void suscribirNuevaReserva(IListenerReserva listener) {
+		gestorNotificaciones.suscribirReserva(listener);
 	}
 	
-	public void desuscribirNuevaReserva(Inmueble inmueble, IListenerReserva listener) {
-		gestorNotificaciones.desuscribirReserva(inmueble, listener);
+	public void desuscribirNuevaReserva(IListenerReserva listener) {
+		gestorNotificaciones.desuscribirReserva(listener);
 	}
 	
 	

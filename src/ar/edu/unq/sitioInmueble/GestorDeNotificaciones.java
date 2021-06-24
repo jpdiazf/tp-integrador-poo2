@@ -51,8 +51,8 @@ public class GestorDeNotificaciones {
 		sensorReserva.addSensorListener(listener);
 	}
 	
-	public void desuscribirReserva(Inmueble inmueble, IListenerReserva listener) {
-		sensorReserva.removeSensorListener(inmueble, listener);
+	public void desuscribirReserva(IListenerReserva listener) {
+		sensorReserva.removeSensorListener(listener);
 	}
 	
 	

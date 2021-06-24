@@ -21,7 +21,7 @@ public class SensorReserva {
 		}
 	}
 
-	public void removeSensorListener(Inmueble inmueble, IListenerReserva listener) {
+	public void removeSensorListener(IListenerReserva listener) {
 		if(this.listeners.indexOf(listener) != -1) {
 			this.listeners.remove(this.listeners.indexOf(listener));
 		}
