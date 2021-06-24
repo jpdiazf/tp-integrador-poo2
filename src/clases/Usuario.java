@@ -2,7 +2,6 @@ package clases;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,16 +26,20 @@ public class Usuario implements IRankeable, IVisualizable {
     private int inmueblesAlquiladosInquilino;
     private Integer inmueblesAlquiladosPropietario;
     private Pantalla pantalla = new Pantalla();
-    private LocalDate usuarioDesde = LocalDate.now();
-    private GestorDeRankeos gestorRankeos = new GestorDeRankeos(); 
+    private LocalDate usuarioDesde;
+    private GestorDeRankeos gestorRankeos; 
 
-	public Usuario(SitioInmuebles sitio, String nombre, String direccionMail, String nroTelefono, MailServer mailServer) {
+	public Usuario(SitioInmuebles sitio, String nombre, String direccionMail, String nroTelefono, MailServer mailServer, GestorDeRankeos gestor, Pantalla pantalla) {
 		this.sitioInmuebles = sitio;
 		this.nombre = nombre;
 		this.direccionMail = direccionMail;
 		this.nroTelefono = nroTelefono;
         this.mailServer = mailServer;
         this.inmueblesAlquiladosInquilino = 0; //sumar� al alquilar...
+        this.inmueblesAlquiladosPropietario = 0;
+        this.gestorRankeos = gestor;
+        this.pantalla = pantalla;
+        this.usuarioDesde = LocalDate.now();
 	}
 
 	public String getMail() {
@@ -60,6 +63,10 @@ public class Usuario implements IRankeable, IVisualizable {
         this.reservasRealizadas.add(reserva);
     }
 
+	public GestorDeRankeos getGestorRankeos() {
+		return this.gestorRankeos;
+	}
+	
 	public void rankear(Rankeo rankeo) {
         rankeo.getRankeable().recibirRankeo(rankeo);
     }
@@ -115,8 +122,6 @@ public class Usuario implements IRankeable, IVisualizable {
 		return this.sitioInmuebles;
 	}
 	
-	// TODO: agregar m�todos de suscripci�n.
-
 	public void recibirMail(Mail mail) {
 		this.mailsRecibidos.add(mail);
 	}
@@ -172,7 +177,7 @@ public class Usuario implements IRankeable, IVisualizable {
 	@Override
 	public void visualizarse() {
 		String textoVisualizacion =
-			"Puntajes: " +
+			"Comentarios: " +
 				this.textoPuntajes() +
 			"Puntaje promedio: " +
 				this.puntajePromedio() +
@@ -198,15 +203,8 @@ public class Usuario implements IRankeable, IVisualizable {
 		return gestorRankeos.promedioTotalRanking();
 	}
 
-	private String textoPuntajes() {
-		List<Rankeo> rankeos = gestorRankeos.getRankeos();
-		String textoPuntajes = "";
-		
-		for (Rankeo rankeo : rankeos) {
-			textoPuntajes += "Comentario: " + rankeo.getComentario() + ". ";
-		}
-		
-		return textoPuntajes;
+	private String textoPuntajes() {		
+		return gestorRankeos.textoComentarios();
 	}
 
 	private List<String> sinRepetidos(List<String> listCiudades) {

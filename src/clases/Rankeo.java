@@ -9,11 +9,9 @@ public class Rankeo {
     private Map<String, Integer> categorias;
 
     public Rankeo(IRankeable rankeable, String comentario, Map<String, Integer> categorias) {
-        this.rankeable = rankeable;
+    	this.rankeable = rankeable;
         this.comentario = comentario;
         this.categorias = categorias;
-        
-        this.validarRankeo();
     }
     
     public String getComentario() {
@@ -30,11 +28,5 @@ public class Rankeo {
     
     public String textoRankeo() {
     	return null; // TODO
-    }
-    
-    // Privates
-
-    private void validarRankeo() {
-        //TODO
     }
 }

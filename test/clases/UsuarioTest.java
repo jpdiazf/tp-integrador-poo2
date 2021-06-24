@@ -12,9 +12,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ar.edu.unq.sitioInmueble.GestorDeRankeos;
 import ar.edu.unq.sitioInmueble.SitioInmuebles;
 import excepciones.ReservationNotFound;
 import interfaces.IFormaDePago;
+import interfaces.IVisualizable;
 
 class UsuarioTest {
 	private Usuario rodri;
@@ -23,20 +25,28 @@ class UsuarioTest {
 	private SitioInmuebles sitio;
     private IFormaDePago transferencia;
     private MailServer mailServer;
-	
+    private GestorDeRankeos gestorRodri;
+    private GestorDeRankeos gestorMartin;
+    private GestorDeRankeos gestorPaula;
+	private Pantalla pantalla;
+    
 	@BeforeEach
 	void setUp() {
+		pantalla = mock(Pantalla.class);
 		sitio = mock(SitioInmuebles.class);
         mailServer = mock(MailServer.class);
-		rodri = new Usuario(sitio, "Rodri", "rodri@unq.edu.ar", "1111111111", mailServer);
-        martin = new Usuario(sitio, "Martin", "martin@unq.edu.ar", "2222222222", mailServer);
 		departamento = mock(Inmueble.class);
         transferencia = mock(IFormaDePago.class);
+        gestorRodri = mock(GestorDeRankeos.class);
+        gestorMartin = mock(GestorDeRankeos.class);
+        gestorPaula = mock(GestorDeRankeos.class);
+        rodri = new Usuario(sitio, "Rodri", "rodri@unq.edu.ar", "1111111111", mailServer, gestorRodri, pantalla);
+        martin = new Usuario(sitio, "Martin", "martin@unq.edu.ar", "2222222222", mailServer, gestorMartin, pantalla);
 	}
 	
 	@Test
 	void constructorTest() {  
-        Usuario paula = new Usuario(sitio, "Paula", "paula@unq.edu.ar", "1234567890", mailServer);
+        Usuario paula = new Usuario(sitio, "Paula", "paula@unq.edu.ar", "1234567890", mailServer, gestorPaula, pantalla);
         
         assertEquals(sitio, paula.getSitioInmuebles());
         assertEquals("Paula", paula.getNombre());
@@ -48,6 +58,25 @@ class UsuarioTest {
         assertEquals(0, paula.getMailsRecibidos().size());
         assertEquals(0, paula.getInmueblesPreferidos().size());
         assertEquals(0, paula.cuantosInmueblesAlquilo());
+        assertEquals(gestorPaula, paula.getGestorRankeos());
+	}
+	
+	@Test
+	void visualizarseTest() {
+		when(gestorRodri.promedioTotalRanking()).thenReturn(2d);
+		when(gestorRodri.textoComentarios()).thenReturn("Muy bueno");
+
+		double promedio = gestorRodri.promedioTotalRanking();
+		String usuarioDesde = LocalDate.now().toString();
+		String textoVisualizacion =
+			"Comentarios: " + "Muy bueno" + 
+			"Puntaje promedio: " + promedio +
+			"Usuario desde: " + usuarioDesde +
+			"Cantidad de inmuebles alquilados: " + rodri.cuantosInmueblesAlquilo();
+
+		rodri.visualizarse();
+		
+		verify(pantalla, times(1)).visualizar(textoVisualizacion);
 	}
 	
 	@Test
@@ -74,39 +103,38 @@ class UsuarioTest {
         verify(sitio, times(1)).recibirReserva(reserva);
 	}
 
-//    @Test
-//    void usuarioRankeaAUnaEntidadTest() {
-//    	Rankeo rankeo = mock(Rankeo.class);
-//        when(rankeo.getRankeable()).thenReturn(martin);
-//        rodri.rankear(rankeo);        
-//        
-//        boolean testedValue = martin.getRankeos().contains(rankeo);
-//        assertTrue(testedValue);
-//    }
-//
-//    void usuarioRankeaAUnaEntidadPeroFallaTest() throws Exception {
-//    	Rankeo rankeo = mock(Rankeo.class);
-//        when(rankeo.getRankeable()).thenReturn(martin);
-//        rodri.rankear(rankeo);
-//        
-//        boolean testedValue = martin.getRankeos().contains(rankeo);
-//        assertTrue(testedValue);
-//    }
-
-//    @Test
-//    void usuarioVisualizaUnVisualizableTest() {
-//        rodri.visualizar(departamento);
-//
-//        verify(departamento, times(1)).visualizar();
-//    }
+	@Test
+	void usuarioRecibeUnRankeoTest() {
+		Rankeo rankeo = mock(Rankeo.class);
+		rodri.recibirRankeo(rankeo);
+		
+		verify(gestorRodri, times(1)).addRankeo(rankeo);
+	}
+	
+	@Test
+	void usuarioEnviaUnRankeoTest() {
+		Rankeo rankeo = mock(Rankeo.class);
+		when(rankeo.getRankeable()).thenReturn(rodri);
+		martin.rankear(rankeo);
+		
+		verify(gestorRodri, times(1)).addRankeo(rankeo);
+	}
+	
+	@Test
+	void usuarioVisualizaUnIVisualizableTest() {
+		Rankeo rankeo = mock(Rankeo.class);
+		when(rankeo.getRankeable()).thenReturn(rodri);
+		martin.rankear(rankeo);
+		
+		verify(gestorRodri, times(1)).addRankeo(rankeo);
+	}
 
     @Test
     void usuarioRecibeUnMailTest() {
-    	Mail mail = mock(Mail.class);
-        martin.recibirMail(mail);
-        boolean actual = martin.getMailsRecibidos().contains(mail);
-        
-        assertTrue(actual);
+    	IVisualizable visualizable = mock(IVisualizable.class);
+    	rodri.visualizar(visualizable);
+    	
+    	verify(visualizable, times(1)).visualizarse();
     }
     
     @Test

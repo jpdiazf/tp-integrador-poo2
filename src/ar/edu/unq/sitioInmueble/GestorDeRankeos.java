@@ -22,6 +22,7 @@ public class GestorDeRankeos {
     }
     
     public void addRankeo(Rankeo rankeo) {
+    	this.validarRankeo(rankeo);
     	this.rankeos.add(rankeo);
     }
     
@@ -44,6 +45,16 @@ public class GestorDeRankeos {
         	return  Math.floor((sum / count) * 100) / 100;
         }
     }
+    
+    public String textoComentarios() {
+    	String textoComentarios = "";
+    	
+    	for(Rankeo rankeo : rankeos) {
+    		textoComentarios += rankeo.getComentario();
+    	}
+    	
+    	return textoComentarios;
+    }
 
 
     public double promedioTotalRanking() {
@@ -60,6 +71,11 @@ public class GestorDeRankeos {
         	return Math.floor((sum / rankeos.size()) * 100) / 100;
         }
      }
+    
+    public void validarRankeo(Rankeo rankeo) {
+		// TODO Auto-generated method stub
+		
+	}
     
     private double promedioPuntaje(Rankeo rankeo) {
     	
@@ -78,4 +94,5 @@ public class GestorDeRankeos {
 
     }
 
+	
 }
