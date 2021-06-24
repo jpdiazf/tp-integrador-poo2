@@ -13,6 +13,7 @@ import clases.Inmueble;
 import clases.MailServer;
 import clases.Rankeo;
 import clases.Usuario;
+import excepciones.EmailAdressNotFound;
 import excepciones.ReservationNotFound;
 import interfaces.IFormaDePago;
 
@@ -41,13 +42,13 @@ class UsuarioTest {
 		verify(sitio, times(1)).darDeAltaInmueble(departamento);
 	}
 
-	// TODO: PREGUNTAR POR EL PROTOCOLO DE ESTE MÃ‰TODO
-	// @Test
-	// void usuarioRealizaUnaBusquedaEnElSitioTest() {
-	// 	rodri.realizarBusqueda();
-
-	// 	sitio.realizarBusqueda();
-	// }
+	// TODO: PREGUNTAR POR EL PROTOCOLO DE ESTE MÉTODO
+	@Test
+	void usuarioRealizaUnaBusquedaEnElSitioTest() {
+//		rodri.realizarBusqueda();
+//
+//		sitio.realizarBusqueda();
+	}
     
 	@Test
 	void usuarioRealizaUnaReservaEnElSitioTest() {
@@ -95,7 +96,7 @@ class UsuarioTest {
     }
 
     @Test
-    void usuarioAceptaUnaReservaTest() {
+    void usuarioAceptaUnaReservaTest() throws Exception {
         Reserva reserva = mock(Reserva.class);
         MailServer mailServer = mock(MailServer.class);
         Mail mail = mock(Mail.class);
@@ -115,6 +116,23 @@ class UsuarioTest {
     }
 
     @Test
+    void usuarioEnviaUnMailAOtroSinArchivoAdjunto() throws Exception {
+    	Mail mail = mock(Mail.class);
+    	rodri.enviarMail(mail);
+    	
+    	verify(mailServer, times(1)).enviarMail(mail);
+    }
+    
+    @Test
+    void usuarioRecibeUnMail() throws Exception {
+    	Mail mail = mock(Mail.class);
+    	martin.recibirMail(mail);
+    	boolean actual = martin.getMailsRecibidos().contains(mail); 
+    	
+    	assertTrue(actual);
+    }
+    
+    @Test
     void usuarioCancelaUnaReservaTest() throws Exception {
     	Reserva reserva = mock(Reserva.class);
         rodri.realizarReserva(reserva);
@@ -131,12 +149,12 @@ class UsuarioTest {
     	assertThrows(ReservationNotFound.class, () -> rodri.cancelarReserva(reserva));
     }
     
-    @Test
-    void usuarioRechazaUnaReservaDeOtroUsuarioTest() throws Exception {
-    	Reserva reserva = mock(Reserva.class);
-    	
-    	assertThrows(ReservationNotFound.class, () -> rodri.rechazarReserva(reserva));
-    }
+//    @Test
+//    void usuarioRechazaUnaReservaDeOtroUsuarioTest() throws Exception {
+//    	Reserva reserva = mock(Reserva.class);
+//    	
+//    	assertThrows(ReservationNotFound.class, () -> rodri.rechazarReserva(reserva));
+//    }
 }
 
 
