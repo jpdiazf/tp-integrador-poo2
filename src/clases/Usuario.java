@@ -10,10 +10,11 @@ import ar.edu.unq.sitioInmueble.GestorDeRankeos;
 import ar.edu.unq.sitioInmueble.SitioInmuebles;
 import excepciones.EmailAdressNotFound;
 import excepciones.ReservationNotFound;
+import interfaces.IListenerReserva;
 import interfaces.IRankeable;
 import interfaces.IVisualizable;
 
-public class Usuario implements IRankeable, IVisualizable {
+public class Usuario implements IRankeable, IVisualizable, IListenerReserva {
 	private SitioInmuebles sitioInmuebles;
 	private String nombre;
 	private String direccionMail;

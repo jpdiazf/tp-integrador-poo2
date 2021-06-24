@@ -10,7 +10,7 @@ import interfaces.IRankeable;
 
 public class GestorDeRankeos {
 
-    private IRankeable rankeable;
+    //private IRankeable rankeable;
     private List<Rankeo> rankeos;
 
     public GestorDeRankeos() {

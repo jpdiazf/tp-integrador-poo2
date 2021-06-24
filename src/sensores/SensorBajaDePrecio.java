@@ -15,26 +15,22 @@ public class SensorBajaDePrecio {
 		this.listeners = new HashMap<Inmueble, ArrayList<IListenerBajaDePrecio>>();
 	}
 	
-	public HashMap<Inmueble, ArrayList<IListenerBajaDePrecio>> getListeners() {
-		return this.listeners;
-	}
-	
 	public void addSensorListener(Inmueble inmueble, IListenerBajaDePrecio listener) {
-		if(!this.getListeners().containsKey(inmueble)) {
-			this.getListeners().put(inmueble, new ArrayList<IListenerBajaDePrecio>());
+		if(!this.listeners.containsKey(inmueble)) {
+			this.listeners.put(inmueble, new ArrayList<IListenerBajaDePrecio>());
 		}
-		this.getListeners().get(inmueble).add(listener);
+		this.listeners.get(inmueble).add(listener);
 	}
 
 	public void removeSensorListener(Inmueble inmueble, IListenerBajaDePrecio listener) {
-		if(this.getListeners().containsKey(inmueble)) {
-			this.getListeners().get(inmueble).remove(listener);
+		if(this.listeners.containsKey(inmueble)) {
+			this.listeners.get(inmueble).remove(listener);
 		}
 	}
 	
 	public void notificarBajaDePrecio(Inmueble inmueble, Double precio) {
-		if(this.getListeners().containsKey(inmueble)) {
-			for (IListenerBajaDePrecio listener : this.getListeners().get(inmueble)) {
+		if(this.listeners.containsKey(inmueble)) {
+			for (IListenerBajaDePrecio listener : this.listeners.get(inmueble)) {
 				listener.publish("No te pierdas esta oferta: Un inmueble " + inmueble.getTipo() +
 						" a tan sólo " + precio + " pesos");
 			}
