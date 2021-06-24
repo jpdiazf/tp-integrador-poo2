@@ -1,10 +1,11 @@
-package clases;
+package ar.edu.unq.sitioInmueble;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import clases.Rankeo;
 import interfaces.IRankeable;
 
 public class GestorDeRankeos {

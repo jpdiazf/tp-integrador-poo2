@@ -23,6 +23,7 @@ public class GestorDeReservas {
 	
 	public void recibirReserva(Reserva reserva) throws Exception {
 		this.validarRealizacionReserva(reserva);
+		this.sitioGestion.updateNuevaReserva(reserva);
 		reservas.add(reserva);
 	}
 	

@@ -34,11 +34,15 @@ public class GestorDeNotificaciones {
 	}
 	
 	public void notificarCancelacionDeReserva(Reserva reserva) {
-		sensorCancelaciones.updateCancelacion(reserva);
+		for(SensorCancelacion sensor:sensoresCancelaciones) {
+			sensor.updateCancelacion(reserva);
+		}
 	}
 	
 	public void notificarNuevaReserva(Reserva reserva) {
-		sensorReservas.updateReservas(reserva);
+		for(SensorReserva sensor:this.sensoresReservas) {
+			sensor.updateReservas(reserva);
+		}
 	}
 	
 	public void suscribirBajaDePrecio(Inmueble inmueble, ISuscriptorBajaDePrecio suscriptor) {
@@ -57,8 +61,9 @@ public class GestorDeNotificaciones {
 		sensorCancelaciones.unsubscribe(reserva, suscriptor);
 	}
 	
-	public void suscribirNuevaReserva(Inmueble inmueble, ISuscriptorReserva suscriptor) {
-		sensorReservas.subscribe(inmueble, suscriptor);
+	public void suscribirNuevaReserva(ISuscriptorReserva suscriptor) {
+		SensorReserva sensorActual = new SensorReserva(suscriptor);
+		suscriptor.agregarSensorReserva(sensorActual);
 	}
 	
 	public void desuscribirNuevaReserva(Inmueble inmueble, ISuscriptorReserva suscriptor) {

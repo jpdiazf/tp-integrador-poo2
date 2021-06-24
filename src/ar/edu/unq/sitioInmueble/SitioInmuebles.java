@@ -32,6 +32,26 @@ public class SitioInmuebles {
 
 	
 	
+	public Double promedioPuntaje(Entidad entidad) {
+		
+		Double cantidad = 0d;
+		Double puntajeTotal = 0d;
+		
+		for(Usuario usuario:usuarios) {
+			if(usuario.getEntidad() == entidad) {
+				cantidad++;
+				puntajeTotal += usuario.getGestorRankeos().getPromedioTotal();
+			}
+		}
+		if(cantidad == 0d) {
+            return 0d;
+        } else {
+        	return Math.floor((puntajeTotal / cantidad) * 100) / 100;
+        }
+		
+	}
+	
+	
 	public HashSet<PoliticaCancelacion> getPoliticasCancelacion() {
 		return politicasCancelacion;
 	}
@@ -63,6 +83,7 @@ public class SitioInmuebles {
 	
 	public void darDeAltaUsuario(Usuario usuario) {
 		usuarios.add(usuario);
+		gestorNotificaciones.suscribirNuevaReserva(usuario);
 	}
 	
 	public void darDeAltaTipoInmueble(String tipoInmueble) {
@@ -234,14 +255,16 @@ public class SitioInmuebles {
 		gestorNotificaciones.desuscribirCancelacionDeReserva(reserva, suscriptor);
 	}
 	
-	public void suscribirNuevaReserva(Inmueble inmueble, ISuscriptorReserva suscriptor) {
-		gestorNotificaciones.suscribirNuevaReserva(inmueble, suscriptor);
+	public void suscribirNuevaReserva(ISuscriptorReserva suscriptor) {
+		gestorNotificaciones.suscribirNuevaReserva(suscriptor);
 	}
 	
 	public void desuscribirNuevaReserva(Inmueble inmueble, ISuscriptorReserva suscriptor) {
 		gestorNotificaciones.desuscribirNuevaReserva(inmueble, suscriptor);
 	}
 	
-	
+	public void updateNuevaReserva(Reserva reserva) {
+		gestorNotificaciones.notificarNuevaReserva(reserva);
+	}
 	
 }

@@ -28,9 +28,8 @@ public class Rankeo {
         //TODO
     }
 
-	public List<Rankeo> getCategorias() {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Integer> getCategorias() {
+		return this.categorias;
 	}
 
 

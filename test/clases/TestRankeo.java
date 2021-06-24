@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import ar.edu.unq.sitioInmueble.GestorDeRankeos;
+
 class TestRankeo {
 
 	GestorDeRankeos gr; 
