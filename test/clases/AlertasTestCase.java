@@ -59,7 +59,10 @@ class AlertasTestCase {
 		//Excersice
 		sr1.notificarReserva(r1);
 		sr1.notificarReserva(r2);
+		sr1.removeSensorListener(suscriptorReserva2);
+		sr1.notificarReserva(r2);
 
+		
 		//Verify
 		verify(suscriptorReserva1).recibirReserva(r1);
 		verify(suscriptorReserva1, times(1)).recibirReserva(any());
@@ -101,6 +104,8 @@ class AlertasTestCase {
 		//Excersice
 		sc1.notificarCancelacion(r1);
 		sc1.notificarCancelacion(r2);
+		sc1.removeSensorListener(i2, suscriptorCancelacion2);
+		sc1.notificarCancelacion(r2);
 		
 		//Verify
 		verify(suscriptorCancelacion1).popUp(msg1, "Rojo", 5);
@@ -135,6 +140,8 @@ class AlertasTestCase {
 
 		//Excersice
 		sp1.notificarBajaDePrecio(i1, 500.0);
+		sp1.notificarBajaDePrecio(i2, 1000.0);
+		sp1.removeSensorListener(i2, suscriptorBajaDePrecio2);
 		sp1.notificarBajaDePrecio(i2, 1000.0);
 		
 		//Verify

@@ -5,21 +5,42 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import clases.PrecioPeriodo;
 
 class PrecioPeriodoTestCase {
 
-	PrecioPeriodo pp1;
+	PrecioPeriodo pp;
+	
+	@BeforeEach
+	void setup() {
+		pp = new PrecioPeriodo(LocalDate.of(2021, 1, 1), LocalDate.of(2021,1,31), 500);
+	}
+	
+	@Test
+	void constructorTest() {
+
+		//Excersice - Verify 
+		assertEquals(pp.comienzo(),LocalDate.of(2021, 1, 1));
+		assertEquals(pp.fin(),LocalDate.of(2021,1,31));
+		assertEquals(pp.valor,500.0);
+	}
+	
+	@Test
+	void setValorTest() {
+		//Excersice
+		pp.setValor(600);
+		
+		//verify
+		assertEquals(pp.valor,600.0);
+	}
 	
 	@Test
 	void pertenceAlRangoTest() {
 
 		//Setup
-		
-		pp1 = new PrecioPeriodo(LocalDate.of(2021, 1, 1), LocalDate.of(2021,1,31), 500);
-		
 		LocalDate enero01 = LocalDate.of(2021, 1, 1);
 		LocalDate enero31 = LocalDate.of(2021, 1, 31);
 		LocalDate febrero1 = LocalDate.of(2021, 2, 1);
@@ -27,11 +48,11 @@ class PrecioPeriodoTestCase {
 		LocalDate enero15 = LocalDate.of(2021, 1, 15);
 		
 		//Excercise
-		boolean e1 = pp1.pertenceAlRango(enero01);
-		boolean e2 = pp1.pertenceAlRango(enero31);
-		boolean e3 = pp1.pertenceAlRango(febrero1);
-		boolean e4 = pp1.pertenceAlRango(diciembre31);
-		boolean e5 = pp1.pertenceAlRango(enero15);
+		boolean e1 = pp.pertenceAlRango(enero01);
+		boolean e2 = pp.pertenceAlRango(enero31);
+		boolean e3 = pp.pertenceAlRango(febrero1);
+		boolean e4 = pp.pertenceAlRango(diciembre31);
+		boolean e5 = pp.pertenceAlRango(enero15);
 		
 		//verify
 		assertTrue(e1);
@@ -41,5 +62,5 @@ class PrecioPeriodoTestCase {
 		assertTrue(e5);
 		
 	}
-
+	
 }

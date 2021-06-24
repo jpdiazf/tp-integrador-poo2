@@ -22,9 +22,9 @@ public class Inmueble implements IVisualizable {
 	private LocalTime horarioCheckIn;
 	private LocalTime horarioCheckOut;
 	private PoliticaCancelacion politicaCancelacion;
-	private List<String> formasDePagoAceptadas; // DEFINIR LA INTERFACE
+	private List<String> formasDePagoAceptadas;
 	private List<PrecioPeriodo> precios;
-	private Rankeo rankeo;
+	private GestorDeRankeos gestorDeRankeos;
 	private Integer vecesAlquilado;
 	
 	public Inmueble(Usuario propietario, String tipo, Double superficie, String pais, String ciudad,
@@ -47,6 +47,7 @@ public class Inmueble implements IVisualizable {
 		this.formasDePagoAceptadas = formasDePagoAceptadas;
 		this.precios = precios;
 		this.vecesAlquilado = 0;
+		this.gestorDeRankeos = new GestorDeRankeos();
 		
 	}
 	
@@ -77,6 +78,14 @@ public class Inmueble implements IVisualizable {
 		}
 		return true;
 	}
+
+	public void sumarVezAlquilado() {
+		this.vecesAlquilado ++;
+	}
+	
+	public void addRankeo(Rankeo rankeo) {
+		this.gestorDeRankeos.addRankeo(rankeo);
+	}
 	
 	private boolean estaPublicado(LocalDate fecha) {
 		for(PrecioPeriodo p : precios) {
@@ -87,7 +96,6 @@ public class Inmueble implements IVisualizable {
 		return false;
 	}
 
-	
 	public Usuario getPropietario() {
 		return this.propietario;
 	}
@@ -112,7 +120,7 @@ public class Inmueble implements IVisualizable {
 	public Integer getCapacidad() {
 		return this.capacidad;
 	}
-	public List<Foto> fotos() {
+	public List<Foto> getFotos() {
 		return this.fotos;
 	}
 	public LocalTime getHorarioCheckIn() {
@@ -121,7 +129,7 @@ public class Inmueble implements IVisualizable {
 	public LocalTime getHorarioCheckOut() {
 		return this.horarioCheckOut;
 	}
-	public Integer vecesAlquilado() {
+	public Integer getVecesAlquilado() {
 		return this.vecesAlquilado;
 	}
 	public PoliticaCancelacion getPoliticaCancelacion() {
@@ -130,12 +138,21 @@ public class Inmueble implements IVisualizable {
 	public List<String> getFormasDePagoAceptadas() {
 		return this.formasDePagoAceptadas;
 	}
-	public Rankeo getRankeo() {
-		return this.rankeo;
-	}
 	
 	public List<PrecioPeriodo> getPrecios() {
 		return this.precios;
+	}
+
+	public List<Rankeo> getRankeos(){
+		return this.gestorDeRankeos.getRankeos();
+	}
+	
+	public double promedioRanking(String categoria) {
+		return this.gestorDeRankeos.promedioRanking(categoria);
+	}
+	
+	public double promedioTotalRanking() {
+		return this.gestorDeRankeos.promedioTotalRanking();
 	}
 
 	public boolean estaOcupado() {
@@ -143,7 +160,7 @@ public class Inmueble implements IVisualizable {
 	}
 
 	@Override
-	public void visualizar() {
+	public void visualizarse() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -152,5 +169,4 @@ public class Inmueble implements IVisualizable {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
