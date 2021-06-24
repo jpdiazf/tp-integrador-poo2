@@ -47,8 +47,8 @@ public class GestorDeNotificaciones {
 		sensorCancelacion.removeSensorListener(inmueble, listener); 
 	}
 	
-	public void suscribirReserva(Inmueble inmueble, IListenerReserva listener) {
-		sensorReserva.addSensorListener(inmueble, listener);
+	public void suscribirReserva(IListenerReserva listener) {
+		sensorReserva.addSensorListener(listener);
 	}
 	
 	public void desuscribirReserva(Inmueble inmueble, IListenerReserva listener) {
@@ -67,7 +67,7 @@ public class GestorDeNotificaciones {
 	}
 	
 	public void notificarNuevaReserva(Reserva reserva) {
-		sensorReserva.notificarReserva(reserva.getInmueble());
+		sensorReserva.notificarReserva(reserva);
 	}
 	
 	
