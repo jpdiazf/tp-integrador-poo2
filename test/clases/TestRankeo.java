@@ -19,14 +19,15 @@ class TestRankeo {
 	
 	@Test
 	void test() {
-		
-		r1 = new Rankeo();
-		r2 = new Rankeo();
-		r3 = new Rankeo();
-		gr = new GestorDeRankeos();
+
 		categorias1 = new HashMap<String, Integer>();
 		categorias2 = new HashMap<String, Integer>();
 		categorias3 = new HashMap<String, Integer>();
+
+		r1 = new Rankeo(null, null, categorias1);
+		r2 = new Rankeo(null,null, categorias1);
+		r3 = new Rankeo(null,null, categorias3);
+		gr = new GestorDeRankeos();
 		
 		categorias1.put("TiempoDeRespuesta", 5);
 		categorias1.put("Amabilidad", 4);
@@ -38,10 +39,7 @@ class TestRankeo {
 		categorias3.put("Seriedad", 3);
 		
 		
-		r1.rankear(categorias1);
-		r2.rankear(categorias2);
-		r3.rankear(categorias3);
-		
+
 		gr.addRankeo(r1);
 		gr.addRankeo(r2);
 		gr.addRankeo(r3);
