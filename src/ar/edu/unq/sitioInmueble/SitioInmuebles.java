@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-
-import ar.edu.unq.siteGUI.IGraphicalUserInterface;
 import clases.Inmueble;
 import clases.PoliticaCancelacion;
 import clases.Reserva;
@@ -92,6 +90,15 @@ public class SitioInmuebles {
 	//ALTAS//
 	
 	
+	public void setGestorReservas(GestorDeReservas nuevoGestor) {
+		this.gestorReservas = nuevoGestor;
+	}
+	
+	public void setGestorNotificaciones(GestorDeNotificaciones nuevoGestor) {
+		this.gestorNotificaciones = nuevoGestor;
+	}
+	
+	
 	public void darDeAltaUsuario(Usuario usuario) {
 		usuarios.add(usuario);
 	//	gestorNotificaciones.suscribirNuevaReserva(usuario);
@@ -133,6 +140,7 @@ public class SitioInmuebles {
 	
 	public void cancelarReserva(Reserva reserva) throws Exception{
 		gestorReservas.cancelarReserva(reserva);
+		this.getGestorNotificaciones().notificarCancelacionDeReserva(reserva);
 	}
 	
 	
@@ -166,15 +174,8 @@ public class SitioInmuebles {
 	}
 	
 	public boolean hayReservaEn(Inmueble inmueble, LocalDate fechaEntrada, LocalDate fechaSalida) {
-		for(Reserva reserva:this.getReservas()) {
-			if(reserva.getInmueble().equals(inmueble) && (reserva.getComienzo().isAfter(fechaSalida) || reserva.getFin().isBefore(fechaEntrada))) {
-				return true;
-			}
-		}
-		return false;
+		return this.getGestorReservas().hayReservaEn(inmueble, fechaEntrada, fechaSalida);
 	}
-	
-	
 	
 	//LISTADOS DE GESTIÓN//
 	
@@ -196,7 +197,7 @@ public class SitioInmuebles {
 		ArrayList<Inmueble> inmuebles = new ArrayList<Inmueble>();
 		
 		for(Inmueble inmueble:this.getInmueblesDeAlta()) {
-			if(!inmueble.estaOcupado()) {
+			if(!this.estaOcupado(inmueble)) {
 				inmuebles.add(inmueble);
 			}
 		}
@@ -206,11 +207,10 @@ public class SitioInmuebles {
 	
 
 	public boolean estaOcupado(Inmueble inmueble) {
-		LocalDate hoy = LocalDate.now();
+		//LocalDate hoy = LocalDate.now();
 		
 		if(this.estaReservado(inmueble)) {
-			Reserva reserva = this.getReservas().stream().filter(r -> r.getInmueble().equals(inmueble)).findFirst().get();
-			return(hoy.isAfter(reserva.getComienzo()) && hoy.isBefore(reserva.getFin()));
+			return this.getGestorReservas().hayReservaHoy(inmueble);
 		}
 		else {
 			return false;

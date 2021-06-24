@@ -18,7 +18,6 @@ import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ar.edu.unq.siteGUI.IGraphicalUserInterface;
 
 class SitioInmueblesTest {
 
@@ -42,6 +41,12 @@ class SitioInmueblesTest {
 	private String categoriaRankInquilino;
 	private String categoriaRankPropietario;
 	
+	LocalDate hoy = LocalDate.now();
+	LocalDate maniana = LocalDate.now().plusDays(1);
+	
+	Reserva reservaDemo;
+	GestorDeReservas nuevoGestorR;
+	GestorDeNotificaciones nuevoGestorN;
 	
 	@BeforeEach
 	void setUp() {
@@ -63,6 +68,9 @@ class SitioInmueblesTest {
 		servicioInmueble2 = "Calefaccion";
 		servicioInmueble3 = "Agua Potable";
 		
+		reservaDemo = mock(Reserva.class);
+		nuevoGestorR = mock(GestorDeReservas.class);
+		nuevoGestorN = mock(GestorDeNotificaciones.class);
 		
 	}
 	
@@ -225,26 +233,28 @@ class SitioInmueblesTest {
 		assertTrue(inmueblesFiltrados.contains(quincho) && inmueblesFiltrados.contains(cabania) && inmueblesFiltrados.size() == 2);
 		
 		
+		
+		//SE BUSCA PERO NO APARECEN RESULTADOS DEBIDO A QUE HAY UNA RESERVA!!!
+		
+		sitio.setGestorReservas(nuevoGestorR);
+		
+		when(nuevoGestorR.hayReservaEn(casita, hoy, mañana)).thenReturn(true); //ahora tengo entre mis reservas, a la correspondiente a la casita.
+		
+		
+		//PRIMERA BÚSQUEDA TOTAL, DE NUEVO
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, 4, 1000d, 1400d);
+		
+		verify(nuevoGestorR, times(1)).hayReservaEn(casita, hoy, mañana);
+		//habitacion es de Quilmes pero sólo admite 2 personas; depto es de quilmes pero supera el precio máximo de $1400.
+		//sólo corresponde la casita, pero esta se encuentra ya reservada!!!
+		assertFalse(inmueblesFiltrados.contains(casita) && inmueblesFiltrados.size() == 1);
+		
 	}
-	
-	
-	@Test
-	void testVisualizacionInmuebles() {
-		
-		
-		
-	}
-	
 	
 	@Test
 	void testRealizacionesReservas() throws Exception {
 		
 		//REALIZACIÓN EXITOSA
-		
-		LocalDate hoy = LocalDate.now();
-		LocalDate maniana = LocalDate.now().plusDays(1);
-		
-		Reserva reservaDemo = mock(Reserva.class);
 		
 		when(reservaDemo.getInmueble()).thenReturn(casita);
 		when(reservaDemo.getComienzo()).thenReturn(hoy);
@@ -294,10 +304,181 @@ class SitioInmueblesTest {
 	
 	
 	@Test
-	void testAceptacionesReservas() {
+	void testAceptacionReserva() throws Exception {
 		
+		sitio.setGestorReservas(nuevoGestorR);
 		
+		Reserva reservaDemo = mock(Reserva.class);
+		
+		sitio.aprobarReserva(reservaDemo);
+		
+		verify(nuevoGestorR, times(1)).aprobarReserva(reservaDemo);
+		
+	}
+	
+	
+	@Test
+	void testRechazoReserva() throws Exception {
+		
+		sitio.setGestorReservas(nuevoGestorR);
+		
+		sitio.rechazarReserva(reservaDemo);
+		
+		verify(nuevoGestorR, times(1)).rechazarReserva(reservaDemo);
+		
+	}
+	
+	
+	@Test
+	void testCancelacionReserva() throws Exception {
+		
+		sitio.setGestorReservas(nuevoGestorR);
+		sitio.setGestorNotificaciones(nuevoGestorN);
+		
+		sitio.cancelarReserva(reservaDemo);
+		
+		verify(nuevoGestorR, times(1)).cancelarReserva(reservaDemo);
+		
+		verify(nuevoGestorN, times(1)).notificarCancelacionDeReserva(reservaDemo);
 		
 	}
 
+	
+	@Test
+	void testListadosDeGestion() {
+		
+		//TOP TEN INQUILINOS ACTIVOS
+		//mockeo 15 usuarios
+		
+		Usuario pablo = mock(Usuario.class);
+		Usuario marcos = mock(Usuario.class); 
+		Usuario martin = mock(Usuario.class); 
+		Usuario samuel = mock(Usuario.class); 
+		Usuario nacho = mock(Usuario.class); 
+		Usuario laura = mock(Usuario.class); 
+		Usuario paola = mock(Usuario.class); 
+		Usuario veronica = mock(Usuario.class); 
+		Usuario malena = mock(Usuario.class); 
+		Usuario ezequiel = mock(Usuario.class); 
+		Usuario daniela = mock(Usuario.class); 
+		Usuario cesar = mock(Usuario.class); 
+		Usuario julio = mock(Usuario.class); 
+		Usuario goku = mock(Usuario.class); 
+		Usuario naruto = mock(Usuario.class); 
+		
+		sitio.darDeAltaUsuario(pablo);
+		sitio.darDeAltaUsuario(marcos);
+		sitio.darDeAltaUsuario(martin);
+		sitio.darDeAltaUsuario(samuel);
+		sitio.darDeAltaUsuario(nacho);
+		sitio.darDeAltaUsuario(laura);
+		sitio.darDeAltaUsuario(paola);
+		sitio.darDeAltaUsuario(veronica);
+		sitio.darDeAltaUsuario(malena);
+		sitio.darDeAltaUsuario(ezequiel);
+		sitio.darDeAltaUsuario(daniela);
+		sitio.darDeAltaUsuario(cesar);
+		sitio.darDeAltaUsuario(julio);
+		sitio.darDeAltaUsuario(goku);
+		sitio.darDeAltaUsuario(naruto);
+		
+		
+		when(pablo.cuantosInmueblesAlquilo()).thenReturn(20);
+		when(marcos.cuantosInmueblesAlquilo()).thenReturn(25);
+		when(martin.cuantosInmueblesAlquilo()).thenReturn(21);
+		when(samuel.cuantosInmueblesAlquilo()).thenReturn(18);
+		when(nacho.cuantosInmueblesAlquilo()).thenReturn(15);
+		when(laura.cuantosInmueblesAlquilo()).thenReturn(25);
+		when(paola.cuantosInmueblesAlquilo()).thenReturn(16);
+		when(veronica.cuantosInmueblesAlquilo()).thenReturn(14); //pocos
+		when(malena.cuantosInmueblesAlquilo()).thenReturn(18);
+		when(ezequiel.cuantosInmueblesAlquilo()).thenReturn(5); //pocos
+		when(daniela.cuantosInmueblesAlquilo()).thenReturn(20);
+		when(cesar.cuantosInmueblesAlquilo()).thenReturn(21);
+		when(julio.cuantosInmueblesAlquilo()).thenReturn(8); //pocos
+		when(goku.cuantosInmueblesAlquilo()).thenReturn(1); //pocos
+		when(naruto.cuantosInmueblesAlquilo()).thenReturn(1); //pocos
+		
+		
+		ArrayList<Usuario> inquilinosActivosCheck = sitio.topTenInquilinosActivos();
+		
+		assertEquals(inquilinosActivosCheck.size(), 10);
+		
+		assertTrue(inquilinosActivosCheck.contains(pablo));
+		assertTrue(inquilinosActivosCheck.contains(marcos));
+		assertTrue(inquilinosActivosCheck.contains(martin));
+		assertTrue(inquilinosActivosCheck.contains(samuel));
+		assertTrue(inquilinosActivosCheck.contains(nacho));
+		assertTrue(inquilinosActivosCheck.contains(laura));
+		assertTrue(inquilinosActivosCheck.contains(paola));
+		assertFalse(inquilinosActivosCheck.contains(veronica));
+		assertTrue(inquilinosActivosCheck.contains(malena));
+		assertFalse(inquilinosActivosCheck.contains(ezequiel));
+		assertTrue(inquilinosActivosCheck.contains(daniela));
+		assertTrue(inquilinosActivosCheck.contains(cesar));
+		assertFalse(inquilinosActivosCheck.contains(julio));
+		assertFalse(inquilinosActivosCheck.contains(goku));
+		assertFalse(inquilinosActivosCheck.contains(naruto));
+		
+	
+		//INMUEBLES LIBRES
+		
+		//MOCKS INMUEBLES A AGREGAR
+		Inmueble casa = mock(Inmueble.class);
+		Inmueble depto = mock(Inmueble.class);
+		Inmueble quincho = mock(Inmueble.class);
+		Inmueble habitacion = mock(Inmueble.class);
+		Inmueble cabania = mock(Inmueble.class);
+		
+		sitio.darDeAltaInmueble(casa);
+		sitio.darDeAltaInmueble(depto);
+		sitio.darDeAltaInmueble(quincho);
+		sitio.darDeAltaInmueble(habitacion);
+		sitio.darDeAltaInmueble(cabania);
+		
+		
+		//MOCKS RESERVAS
+		Reserva reservaEj1 = mock(Reserva.class);
+		Reserva reservaEj2 = mock(Reserva.class);
+		Reserva reservaEj3 = mock(Reserva.class);
+		
+		when(reservaEj1.getInmueble()).thenReturn(depto);
+		when(reservaEj2.getInmueble()).thenReturn(quincho);
+		when(reservaEj3.getInmueble()).thenReturn(habitacion);
+		
+		ArrayList<Reserva> reservados = new ArrayList<Reserva>();
+		reservados.add(reservaEj1);
+		reservados.add(reservaEj2);
+		reservados.add(reservaEj3);
+		
+		when(nuevoGestorR.getReservas()).thenReturn(reservados);
+		
+		//SET DEL GESTOR
+		sitio.setGestorReservas(nuevoGestorR);
+		
+		//HAY RESERVAS
+		assertTrue(sitio.estaReservado(depto));	
+		assertTrue(sitio.estaReservado(quincho));	
+		assertTrue(sitio.estaReservado(habitacion));
+		assertFalse(sitio.estaReservado(casa));	
+		assertFalse(sitio.estaReservado(cabania));	
+		
+		
+		when(nuevoGestorR.hayReservaHoy(depto)).thenReturn(true);
+		when(nuevoGestorR.hayReservaHoy(quincho)).thenReturn(true);
+		when(nuevoGestorR.hayReservaHoy(habitacion)).thenReturn(true);
+		
+		ArrayList<Inmueble> inmueblesLibres = sitio.mostrarInmueblesLibres();
+		
+		assertTrue(inmueblesLibres.size() == 2);
+		
+		assertTrue(inmueblesLibres.contains(casa));
+		assertTrue(inmueblesLibres.contains(cabania));
+		assertFalse(inmueblesLibres.contains(depto));
+		assertFalse(inmueblesLibres.contains(quincho));
+		assertFalse(inmueblesLibres.contains(habitacion));
+		
+	}
+	
+	
 }

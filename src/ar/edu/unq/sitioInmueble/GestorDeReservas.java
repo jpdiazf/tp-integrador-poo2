@@ -1,5 +1,6 @@
 package ar.edu.unq.sitioInmueble;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import clases.Inmueble;
@@ -33,7 +34,7 @@ public class GestorDeReservas {
 	
 	public void aprobarReserva(Reserva reserva) throws Exception{
 		Reserva reservaAAprobar= this.buscarReserva(reserva);
-		//PREGUNTAR SOBRE MÁS VALIDACIONES
+		this.validarReservaHacia(reserva, reserva.getPropietario());
 		reservaAAprobar.aprobar();
 		//reservaAAprobar.getInquilino().notificarAprobacion(reservaAAprobar);
 	}
@@ -53,6 +54,28 @@ public class GestorDeReservas {
 	private Reserva buscarReserva(Reserva reserva) throws Exception{
 		this.validarReservaActiva(reserva);
 		return this.getReservas().stream().filter(r -> r.equals(reserva)).findFirst().get();
+	}
+	
+	
+	public boolean hayReservaEn(Inmueble inmueble, LocalDate fechaEntrada, LocalDate fechaSalida) {
+		for(Reserva reserva:this.getReservas()) {
+			if(reserva.getInmueble().equals(inmueble)) {
+				return ( (reserva.getComienzo().isAfter(fechaEntrada) && reserva.getFin().isBefore(fechaSalida)) ||
+						(reserva.getComienzo().isBefore(fechaEntrada) && reserva.getFin().isAfter(fechaSalida)) ||
+						(reserva.getComienzo().isAfter(fechaEntrada) && reserva.getFin().isAfter(fechaSalida)));
+			}
+		}
+		return false;
+		
+	}
+	
+	public boolean hayReservaHoy(Inmueble inmueble) {
+		for(Reserva reserva:this.getReservas()) {
+			if(reserva.getInmueble().equals(inmueble)) {
+				return LocalDate.now().isAfter(reserva.getComienzo()) && LocalDate.now().isBefore(reserva.getFin());
+			}
+		}
+		return false;
 	}
 	
 	
