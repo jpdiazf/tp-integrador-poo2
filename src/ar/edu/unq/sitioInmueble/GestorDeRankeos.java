@@ -17,6 +17,10 @@ public class GestorDeRankeos {
     	this.rankeos = new ArrayList<Rankeo>();
     }
     
+    public List<Rankeo> getRankeos() {
+    	return this.rankeos;
+    }
+    
     public void addRankeo(Rankeo rankeo) {
     	this.rankeos.add(rankeo);
     }

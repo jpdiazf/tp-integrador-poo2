@@ -1,27 +1,34 @@
 package clases;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import ar.edu.unq.sitioInmueble.GestorDeRankeos;
 import ar.edu.unq.sitioInmueble.SitioInmuebles;
 import excepciones.EmailAdressNotFound;
 import excepciones.ReservationNotFound;
 import interfaces.IRankeable;
-import interfaces.ISuscriptorReserva;
 import interfaces.IVisualizable;
 
-public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
+public class Usuario implements IRankeable, IVisualizable {
 	private SitioInmuebles sitioInmuebles;
 	private String nombre;
 	private String direccionMail;
 	private String nroTelefono;
-    private List<Rankeo> rankeos = new ArrayList<>();
     private List<Reserva> reservasRecibidas = new ArrayList<>();
     private List<Reserva> reservasRealizadas = new ArrayList<>();
     private List<Mail> mailsRecibidos = new ArrayList<>();
     private List<Inmueble> inmueblesPreferidos = new ArrayList<>(); 
     private MailServer mailServer;
     private int inmueblesAlquiladosInquilino;
+    private Integer inmueblesAlquiladosPropietario;
+    private Pantalla pantalla = new Pantalla();
+    private LocalDate usuarioDesde = LocalDate.now();
+    private GestorDeRankeos gestorRankeos = new GestorDeRankeos(); 
 
 	public Usuario(SitioInmuebles sitio, String nombre, String direccionMail, String nroTelefono, MailServer mailServer) {
 		this.sitioInmuebles = sitio;
@@ -58,12 +65,10 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
     }
 
 	public void recibirRankeo(Rankeo rankeo) {
-        this.rankeos.add(rankeo);
+        gestorRankeos.addRankeo(rankeo);
     }
 
 	public void recibirReserva(Reserva reserva) {
-		// TODO verificar que explote.
-		// NO ME ACUERDO QU� SIGNIFICA ESTO
 		this.reservasRecibidas.add(reserva);
 	}
 	
@@ -78,12 +83,8 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 		return nombre;
 	}
 	
-    public List<Rankeo> getRankeos() {
-		return this.rankeos;
-	}
-
     public void visualizar(IVisualizable visualizable) {
-        visualizable.visualizar();
+        visualizable.visualizarse();
     }
 
 	public void aceptarReserva(Reserva reserva) throws Exception {        
@@ -116,11 +117,6 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 	
 	// TODO: agregar m�todos de suscripci�n.
 
-	@Override
-	public void visualizar() {
-		// TODO Auto-generated method stub
-	}
-	
 	public void recibirMail(Mail mail) {
 		this.mailsRecibidos.add(mail);
 	}
@@ -145,7 +141,82 @@ public class Usuario implements ISuscriptorReserva, IRankeable, IVisualizable {
 		return this.inmueblesPreferidos;
 	}
 
+	public List<Reserva> getTodasLasReservas() {
+		return this.getReservasRealizadas();
+	}
+	
+	public List<Reserva> getReservasConCiudad(String ciudad) {
+		return reservasRealizadas.stream()
+								 .filter(r -> r.getInmueble().getCiudad().equals(ciudad))
+								 .collect(Collectors.toList());
+	}
+	
+	public List<String> getCiudadesConReservas() {
+		List<String> ciudades = reservasRealizadas
+								 .stream()
+								 .map(r -> r.getInmueble().getCiudad())
+								 .collect(Collectors.toList());
+		
+		return this.sinRepetidos(ciudades);
+	}
+	
+	public List<Reserva> getReservasFuturas() {
+		List<Reserva> reservasFuturas = reservasRealizadas
+				.stream()
+				.filter(r -> r.getComienzo().compareTo(LocalDate.now()) > 0)
+				.collect(Collectors.toList());
+		
+		return reservasFuturas;
+	}
+	
+	@Override
+	public void visualizarse() {
+		String textoVisualizacion =
+			"Puntajes: " +
+				this.textoPuntajes() +
+			"Puntaje promedio: " +
+				this.puntajePromedio() +
+			"Usuario desde: " +
+				this.getUsuarioDesde() +
+			"Cantidad de inmuebles alquilados: " +
+				this.getInmueblesAlquilados();
+		
+		this.pantalla.visualizar(textoVisualizacion);
+	}
+	
 	// Privates
+	
+	private String getUsuarioDesde() {
+		return usuarioDesde.toString();
+	}
+
+	private String getInmueblesAlquilados() {
+		return inmueblesAlquiladosPropietario.toString();
+	}
+
+	private double puntajePromedio() {
+		return gestorRankeos.promedioTotalRanking();
+	}
+
+	private String textoPuntajes() {
+		List<Rankeo> rankeos = gestorRankeos.getRankeos();
+		String textoPuntajes = "";
+		
+		for (Rankeo rankeo : rankeos) {
+			textoPuntajes += "Comentario: " + rankeo.getComentario() + ". ";
+		}
+		
+		return textoPuntajes;
+	}
+
+	private List<String> sinRepetidos(List<String> listCiudades) {
+		Set<String> setCiudades = new HashSet<>(listCiudades);
+		listCiudades.clear();
+		listCiudades.addAll(setCiudades);
+		
+		return listCiudades;
+	}
+	
 	private void validarCancelacion(Reserva reserva) throws Exception {
 		if(!this.reservasRealizadas.contains(reserva)) {
 			throw new ReservationNotFound("No se puede cancelar una Reserva no realizada");

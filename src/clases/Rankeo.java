@@ -1,5 +1,4 @@
 package clases;
-import java.util.List;
 import java.util.Map;
 
 import interfaces.IRankeable;
@@ -16,10 +15,21 @@ public class Rankeo {
         
         this.validarRankeo();
     }
-
+    
+    public String getComentario() {
+    	return this.comentario;
+    }
+    
     public IRankeable getRankeable() {
-        //TODO
-        return null;
+    	return rankeable;
+    }
+    
+    public Map<String, Integer> getCategorias() {
+    	return this.categorias;
+    }
+    
+    public String textoRankeo() {
+    	return null; // TODO
     }
     
     // Privates
@@ -27,10 +37,4 @@ public class Rankeo {
     private void validarRankeo() {
         //TODO
     }
-
-	public Map<String, Integer> getCategorias() {
-		return this.categorias;
-	}
-
-
 }

@@ -43,7 +43,6 @@ class UsuarioTest {
         assertEquals("paula@unq.edu.ar", paula.getMail());
         assertEquals("1234567890", paula.getNroTelefono());
         assertEquals(mailServer, paula.getMailServer());
-        assertEquals(0, paula.getRankeos().size());
         assertEquals(0, paula.getReservasRecibidas().size());
         assertEquals(0, paula.getReservasRealizadas().size());
         assertEquals(0, paula.getMailsRecibidos().size());
@@ -58,7 +57,6 @@ class UsuarioTest {
 		verify(sitio, times(1)).darDeAltaInmueble(departamento);
 	}
 
-	// TODO: PREGUNTAR POR EL PROTOCOLO DE ESTE MÉTODO
 	@Test
 	void usuarioRealizaUnaBusquedaEnElSitioTest() {
 		LocalDate fechaEntrada = LocalDate.of(2021, 6, 27);
@@ -76,17 +74,16 @@ class UsuarioTest {
         verify(sitio, times(1)).recibirReserva(reserva);
 	}
 
-    @Test
-    void usuarioRankeaAUnaEntidadTest() {
-    	Rankeo rankeo = mock(Rankeo.class);
-        when(rankeo.getRankeable()).thenReturn(martin);
-        rodri.rankear(rankeo);        
-        
-        boolean testedValue = martin.getRankeos().contains(rankeo);
-        assertTrue(testedValue);
-    }
-
-//    TODO: qué hacemos con las ocupaciones?
+//    @Test
+//    void usuarioRankeaAUnaEntidadTest() {
+//    	Rankeo rankeo = mock(Rankeo.class);
+//        when(rankeo.getRankeable()).thenReturn(martin);
+//        rodri.rankear(rankeo);        
+//        
+//        boolean testedValue = martin.getRankeos().contains(rankeo);
+//        assertTrue(testedValue);
+//    }
+//
 //    void usuarioRankeaAUnaEntidadPeroFallaTest() throws Exception {
 //    	Rankeo rankeo = mock(Rankeo.class);
 //        when(rankeo.getRankeable()).thenReturn(martin);
@@ -96,13 +93,12 @@ class UsuarioTest {
 //        assertTrue(testedValue);
 //    }
 
-    // TODO: implementar visualizar
-    @Test
-    void usuarioVisualizaUnVisualizableTest() {
-        rodri.visualizar(departamento);
-
-        verify(departamento, times(1)).visualizar();
-    }
+//    @Test
+//    void usuarioVisualizaUnVisualizableTest() {
+//        rodri.visualizar(departamento);
+//
+//        verify(departamento, times(1)).visualizar();
+//    }
 
     @Test
     void usuarioRecibeUnMailTest() {
@@ -126,7 +122,6 @@ class UsuarioTest {
     @Test
     void usuarioAceptaUnaReservaTest() throws Exception {
         Reserva reserva = mock(Reserva.class);
-        MailServer mailServer = mock(MailServer.class);
         Mail mail = mock(Mail.class);
          
         when(reserva.getInquilino()).thenReturn(martin);
@@ -167,7 +162,6 @@ class UsuarioTest {
         verify(sitio, times(1)).cancelarReserva(reserva);
     }
     
-//    TODO: ver qué onda con este test.
     @Test
     void usuarioCancelaUnaReservaYFallaTest() throws Exception {
     	Reserva reserva = mock(Reserva.class);
@@ -191,6 +185,100 @@ class UsuarioTest {
     	Reserva reserva = mock(Reserva.class);
     	
     	assertThrows(ReservationNotFound.class, () -> rodri.rechazarReserva(reserva));
+    }
+    
+    @Test
+    void todasLasReservasTest() throws Exception {
+    	Reserva casa = mock(Reserva.class);
+    	Reserva departamento = mock(Reserva.class);
+    	
+    	rodri.realizarReserva(casa);
+    	rodri.realizarReserva(departamento);
+    	
+    	List<Reserva> todas = rodri.getTodasLasReservas();
+    	
+    	assertTrue(todas.contains(casa));
+    	assertTrue(todas.contains(departamento));
+    }
+    
+    @Test
+    void reservasFuturasTest() throws Exception {
+    	Reserva habitacion = mock(Reserva.class);
+    	Reserva casa = mock(Reserva.class);
+    	Reserva departamento = mock(Reserva.class);
+    	LocalDate hoy = LocalDate.of(2021, 6, 24);
+    	LocalDate ayer = hoy.minusDays(1);
+    	LocalDate mañana = hoy.plusDays(1);
+    	
+    	when(habitacion.getComienzo()).thenReturn(hoy);
+    	when(casa.getComienzo()).thenReturn(mañana);
+    	when(departamento.getComienzo()).thenReturn(ayer);
+    	
+    	rodri.realizarReserva(habitacion);
+    	rodri.realizarReserva(casa);
+    	rodri.realizarReserva(departamento);
+    	
+    	List<Reserva> reservas = rodri.getReservasFuturas();
+    	
+    	assertTrue(reservas.contains(casa));
+    	assertFalse(reservas.contains(departamento));
+    	assertFalse(reservas.contains(habitacion));
+    }
+    
+    @Test
+    void reservasDeCiudadTest() throws Exception {
+    	Reserva reservaHabitacion = mock(Reserva.class);
+    	Reserva reservaCasa = mock(Reserva.class);
+    	Reserva reservaDepartamento = mock(Reserva.class);
+    	Inmueble habitacion = mock(Inmueble.class);
+    	Inmueble casa = mock(Inmueble.class);
+    	Inmueble departamento = mock(Inmueble.class);
+    	
+    	when(casa.getCiudad()).thenReturn("Berazategui");
+    	when(habitacion.getCiudad()).thenReturn("Quilmes");
+    	when(departamento.getCiudad()).thenReturn("Berazategui");
+    	
+    	when(reservaHabitacion.getInmueble()).thenReturn(habitacion);
+    	when(reservaCasa.getInmueble()).thenReturn(casa);
+    	when(reservaDepartamento.getInmueble()).thenReturn(departamento);
+    	
+    	rodri.realizarReserva(reservaHabitacion);
+    	rodri.realizarReserva(reservaCasa);
+    	rodri.realizarReserva(reservaDepartamento);
+    	
+    	List<Reserva> reservas = rodri.getReservasConCiudad("Berazategui");
+    	
+    	assertTrue(reservas.contains(reservaCasa));
+    	assertTrue(reservas.contains(reservaDepartamento));
+    	assertFalse(reservas.contains(reservaHabitacion));
+    }
+    
+    @Test
+    void ciudadesConReserva() throws Exception {
+    	Reserva reservaHabitacion = mock(Reserva.class);
+    	Reserva reservaCasa = mock(Reserva.class);
+    	Reserva reservaDepartamento = mock(Reserva.class);
+    	Inmueble habitacion = mock(Inmueble.class);
+    	Inmueble casa = mock(Inmueble.class);
+    	Inmueble departamento = mock(Inmueble.class);
+    	
+    	when(casa.getCiudad()).thenReturn("Berazategui");
+    	when(habitacion.getCiudad()).thenReturn("Quilmes");
+    	when(departamento.getCiudad()).thenReturn("Berazategui");
+    	
+    	when(reservaHabitacion.getInmueble()).thenReturn(habitacion);
+    	when(reservaCasa.getInmueble()).thenReturn(casa);
+    	when(reservaDepartamento.getInmueble()).thenReturn(departamento);
+    	
+    	rodri.realizarReserva(reservaHabitacion);
+    	rodri.realizarReserva(reservaCasa);
+    	rodri.realizarReserva(reservaDepartamento);
+    	
+    	List<String> ciudades = rodri.getCiudadesConReservas();
+    	
+    	assertTrue(ciudades.contains("Berazategui"));
+    	assertTrue(ciudades.contains("Quilmes"));
+    	assertEquals(2, ciudades.size());
     }
 }
 

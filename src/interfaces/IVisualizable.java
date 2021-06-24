@@ -2,5 +2,5 @@ package interfaces;
 
 
 public interface IVisualizable {
-    public void visualizar();
+    public void visualizarse();
 }
