@@ -6,11 +6,9 @@ import java.util.Map;
 import java.util.Set;
 
 import clases.Rankeo;
-import interfaces.IRankeable;
 
 public class GestorDeRankeos {
 
-    //private IRankeable rankeable;
     private List<Rankeo> rankeos;
 
     public GestorDeRankeos() {

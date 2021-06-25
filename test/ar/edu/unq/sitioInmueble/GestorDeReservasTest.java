@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import clases.Inmueble;
-import clases.PoliticaCancelacion;
 import clases.Reserva;
 import clases.Usuario;
 
@@ -66,11 +65,11 @@ class GestorDeReservasTest {
 	@Test 
 	void testRecibimientoReservas() throws Exception{
 		
-		//RESERVA CON ÉXITO
+		//RESERVA CON ï¿½XITO
 		
-		//Preparación Double del site
+		//Preparaciï¿½n Double del site
 		when(sitioGestion.estaDadoDeAlta(casa)).thenReturn(true);
-		//Preparación Double del inmueble
+		//Preparaciï¿½n Double del inmueble
 		when(casa.estaPublicadoPeriodo(reservaCasa.getComienzo(), reservaCasa.getFin())).thenReturn(true);
 		
 		gestor.recibirReserva(reservaCasa);
@@ -112,7 +111,7 @@ class GestorDeReservasTest {
 	@Test
 	void aprobacionORechazoReservas() throws Exception{
 		
-		//APROBACIÓN CON ÉXITO
+		//APROBACIï¿½N CON ï¿½XITO
 		
 		//Se recibe la reserva ya testeada previamente
 		
@@ -131,11 +130,11 @@ class GestorDeReservasTest {
 		
 		gestor.aprobarReserva(reservaCasa);
 		
-		//Se verifica su aprobación
+		//Se verifica su aprobaciï¿½n
 		verify(reservaCasa, times(1)).aprobar();
 		
 		
-		//APROBACIÓN CON ERROR
+		//APROBACIï¿½N CON ERROR
 		
 		Reserva reservaPrueba = mock(Reserva.class);
 		Inmueble inmueblePrueba = mock(Inmueble.class);
@@ -151,7 +150,7 @@ class GestorDeReservasTest {
 		
 		assertEquals("No se encuentra una reserva del inmueble prueba", err1.getMessage());
 		
-		//Es dada de alta, ¡pero ya se encuentra aceptada!
+		//Es dada de alta, ï¿½pero ya se encuentra aceptada!
 		when(sitioGestion.estaDadoDeAlta(inmueblePrueba)).thenReturn(true);
 		when(inmueblePrueba.estaPublicadoPeriodo(reservaPrueba.getComienzo(), reservaPrueba.getFin())).thenReturn(true);
 		gestor.recibirReserva(reservaPrueba);
@@ -167,7 +166,7 @@ class GestorDeReservasTest {
 	@Test
 	void rechazoReservas() throws Exception {
 		
-		//RECHAZO CON ÉXITO
+		//RECHAZO CON ï¿½XITO
 		
 		//Se recibe la reserva ya testeada previamente
 		
@@ -201,15 +200,15 @@ class GestorDeReservasTest {
 		Usuario propietarioCasa = mock(Usuario.class);
 		when(reservaCasa.getPropietario()).thenReturn(propietarioCasa);
 		
-		//está en el gestor
+		//estï¿½ en el gestor
 		assertTrue(gestor.getReservas().contains(reservaCasa));
 		
 		gestor.cancelarReserva(reservaCasa);
 		
-		//ya se canceló
+		//ya se cancelï¿½
 		assertFalse(gestor.getReservas().contains(reservaCasa));
 		
-		//la misma reserva se cancela y se delega el pago con su política de cancelación correspondiente...
+		//la misma reserva se cancela y se delega el pago con su polï¿½tica de cancelaciï¿½n correspondiente...
 		verify(reservaCasa, times(1)).cancelar();
 		
 		verify(sitioGestion, times(1)).notificarCancelacionDeReserva(reservaCasa);
@@ -227,7 +226,7 @@ class GestorDeReservasTest {
 						
 		gestor.recibirReserva(reservaCasa);
 		
-		//y siguiendo con la misma lógica, se agregan 2 reservas más...
+		//y siguiendo con la misma lï¿½gica, se agregan 2 reservas mï¿½s...
 		
 		when(sitioGestion.estaDadoDeAlta(depto)).thenReturn(true);
 		when(depto.estaPublicadoPeriodo(reservaDepto.getComienzo(), reservaDepto.getFin())).thenReturn(true);
@@ -242,15 +241,15 @@ class GestorDeReservasTest {
 		//Mock sobre fechas para assertions
 		LocalDate hoy = LocalDate.now();
 		
-		//Reserva de la casa desde ayer hasta 3 días más adelante.
+		//Reserva de la casa desde ayer hasta 3 dï¿½as mï¿½s adelante.
 		when(reservaCasa.getComienzo()).thenReturn(hoy.minusDays(1));
 		when(reservaCasa.getFin()).thenReturn(hoy.plusDays(3));
 		
-		//Reserva del depto desde pasado mañana hasta 5 días más adelante.
+		//Reserva del depto desde pasado maï¿½ana hasta 5 dï¿½as mï¿½s adelante.
 		when(reservaDepto.getComienzo()).thenReturn(hoy.plusDays(2));
 		when(reservaDepto.getFin()).thenReturn(hoy.plusDays(7));
 		
-		//Reserva de la habitación desde hoy hasta pasado mañana.
+		//Reserva de la habitaciï¿½n desde hoy hasta pasado maï¿½ana.
 		when(reservaHabitacion.getComienzo()).thenReturn(hoy.plusDays(1));
 		when(reservaHabitacion.getFin()).thenReturn(hoy.plusDays(2));
 		
@@ -271,7 +270,7 @@ class GestorDeReservasTest {
 		assertFalse(gestor.hayReservaEn(depto, hoy.plusDays(8), hoy.plusDays(11)));
 		
 		
-		//También funciona con la reserva de un inmueble que no esté reservado.
+		//Tambiï¿½n funciona con la reserva de un inmueble que no estï¿½ reservado.
 		
 		assertFalse(gestor.hayReservaEn(mock(Inmueble.class), hoy, hoy.plusDays(1)));
 		

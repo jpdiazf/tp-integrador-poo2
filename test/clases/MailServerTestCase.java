@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import excepciones.EmailAdressNotFound;
-import net.bytebuddy.asm.Advice.Thrown;
 
 class MailServerTestCase {
 	MailServer mailServer;

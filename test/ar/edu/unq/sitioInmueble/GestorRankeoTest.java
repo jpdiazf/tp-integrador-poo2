@@ -10,7 +10,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ar.edu.unq.sitioInmueble.GestorDeRankeos;
 import clases.Rankeo;
 
 class GestorRankeoTest {

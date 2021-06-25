@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import interfaces.IFormaDePago;
-import interfaces.IRankeable;
+
 
 class ReservasTestCase {
 

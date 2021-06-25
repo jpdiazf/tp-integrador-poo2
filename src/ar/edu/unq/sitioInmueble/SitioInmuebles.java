@@ -12,7 +12,6 @@ import clases.Usuario;
 import interfaces.IListenerBajaDePrecio;
 import interfaces.IListenerCancelacion;
 import interfaces.IListenerReserva;
-import interfaces.IVisualizable;
 
 
 public class SitioInmuebles {
