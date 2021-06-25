@@ -1,6 +1,7 @@
 package ar.edu.unq.sitioInmueble;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import clases.Inmueble;
@@ -41,8 +42,8 @@ public class GestorDeReservas {
 	
 	public void rechazarReserva(Reserva reserva) throws Exception{
 		Reserva reservaARechazar= this.buscarReserva(reserva);
-		this.validarRechazo(reserva);
-		reservaARechazar.rechazar();
+		this.validarAprobacion(reserva);
+		this.getReservas().remove(reservaARechazar);
 		//reservaARechazar.getInquilino().notificarRechazo(reservaAAprobar);
 	}
 	
@@ -50,6 +51,7 @@ public class GestorDeReservas {
 		Reserva reservaACancelar = this.buscarReserva(reserva);
 		reservaACancelar.cancelar();
 		this.getReservas().remove(reservaACancelar);
+		this.getSitioGestion().notificarCancelacionDeReserva(reservaACancelar);
 	}
 	
 	private Reserva buscarReserva(Reserva reserva) throws Exception{
@@ -63,7 +65,9 @@ public class GestorDeReservas {
 			if(reserva.getInmueble().equals(inmueble)) {
 				return ( (reserva.getComienzo().isAfter(fechaEntrada) && reserva.getFin().isBefore(fechaSalida)) ||
 						(reserva.getComienzo().isBefore(fechaEntrada) && reserva.getFin().isAfter(fechaSalida)) ||
-						(reserva.getComienzo().isAfter(fechaEntrada) && reserva.getFin().isAfter(fechaSalida)));
+						(reserva.getComienzo().isBefore(fechaEntrada) && reserva.getFin().isAfter(fechaSalida)) ||
+						(reserva.getComienzo().isAfter(fechaEntrada) && reserva.getFin().isAfter(fechaSalida) && reserva.getComienzo().isBefore(fechaSalida)) ||
+						(reserva.getComienzo().isBefore(fechaEntrada) && reserva.getFin().isBefore(fechaSalida) && reserva.getFin().isAfter(fechaEntrada)));
 			}
 		}
 		return false;
@@ -73,7 +77,12 @@ public class GestorDeReservas {
 	public boolean hayReservaHoy(Inmueble inmueble) {
 		for(Reserva reserva:this.getReservas()) {
 			if(reserva.getInmueble().equals(inmueble)) {
-				return LocalDate.now().isAfter(reserva.getComienzo()) && LocalDate.now().isBefore(reserva.getFin());
+				
+				LocalDate min = reserva.getComienzo();
+				LocalDate max = reserva.getFin();   // assume these are set to something
+				LocalDate hoy = LocalDate.now();          // the date in question
+
+				return hoy.isAfter(min) && hoy.isBefore(max);
 			}
 		}
 		return false;
@@ -98,12 +107,6 @@ public class GestorDeReservas {
 	private void validarAprobacion(Reserva reserva) throws Exception {
 		if(reserva.estaAceptada()) {
 			throw new Exception("La reserva ya se encuentra aceptada");
-		}
-	}
-	
-	private void validarRechazo(Reserva reserva) throws Exception {
-		if(!reserva.estaAceptada()) {
-			throw new Exception("La reserva ya se encuentra rechazada");
 		}
 	}
 	

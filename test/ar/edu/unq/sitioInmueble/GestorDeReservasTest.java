@@ -6,10 +6,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import clases.Inmueble;
+import clases.PoliticaCancelacion;
 import clases.Reserva;
 import clases.Usuario;
 
@@ -158,18 +161,129 @@ class GestorDeReservasTest {
 		
 		assertEquals("La reserva ya se encuentra aceptada", err2.getMessage());
 		
-		//RECHAZO CON ÉXITO
-		
-		
-		
-		
 	}
 	
 	
 	@Test
 	void rechazoReservas() throws Exception {
 		
+		//RECHAZO CON ÉXITO
 		
+		//Se recibe la reserva ya testeada previamente
+		
+		when(sitioGestion.estaDadoDeAlta(casa)).thenReturn(true);
+		when(casa.estaPublicadoPeriodo(reservaCasa.getComienzo(), reservaCasa.getFin())).thenReturn(true);
+				
+		gestor.recibirReserva(reservaCasa);
+		
+		Usuario propietarioCasa = mock(Usuario.class);
+		when(reservaCasa.getPropietario()).thenReturn(propietarioCasa);
+		//NO debe estar aceptada la reserva...
+		when(reservaCasa.estaAceptada()).thenReturn(false);
+		
+		assertTrue(gestor.getReservas().contains(reservaCasa));
+		
+		gestor.rechazarReserva(reservaCasa);
+		
+		assertFalse(gestor.getReservas().contains(reservaCasa));
+		
+	}
+	
+	
+	@Test
+	void cancelacionReservas() throws Exception {
+		
+		when(sitioGestion.estaDadoDeAlta(casa)).thenReturn(true);
+		when(casa.estaPublicadoPeriodo(reservaCasa.getComienzo(), reservaCasa.getFin())).thenReturn(true);
+				
+		gestor.recibirReserva(reservaCasa);
+		
+		Usuario propietarioCasa = mock(Usuario.class);
+		when(reservaCasa.getPropietario()).thenReturn(propietarioCasa);
+		
+		//está en el gestor
+		assertTrue(gestor.getReservas().contains(reservaCasa));
+		
+		gestor.cancelarReserva(reservaCasa);
+		
+		//ya se canceló
+		assertFalse(gestor.getReservas().contains(reservaCasa));
+		
+		//la misma reserva se cancela y se delega el pago con su política de cancelación correspondiente...
+		verify(reservaCasa, times(1)).cancelar();
+		
+		verify(sitioGestion, times(1)).notificarCancelacionDeReserva(reservaCasa);
+		
+	}
+	
+	
+	@Test
+	void consultasSobreReservas() throws Exception{
+		
+		//Se recibe la reserva ya testeada previamente
+		
+		when(sitioGestion.estaDadoDeAlta(casa)).thenReturn(true);
+		when(casa.estaPublicadoPeriodo(reservaCasa.getComienzo(), reservaCasa.getFin())).thenReturn(true);
+						
+		gestor.recibirReserva(reservaCasa);
+		
+		//y siguiendo con la misma lógica, se agregan 2 reservas más...
+		
+		when(sitioGestion.estaDadoDeAlta(depto)).thenReturn(true);
+		when(depto.estaPublicadoPeriodo(reservaDepto.getComienzo(), reservaDepto.getFin())).thenReturn(true);
+		
+		gestor.recibirReserva(reservaDepto);
+		
+		when(sitioGestion.estaDadoDeAlta(habitacion)).thenReturn(true);
+		when(habitacion.estaPublicadoPeriodo(reservaHabitacion.getComienzo(), reservaHabitacion.getFin())).thenReturn(true);
+		
+		gestor.recibirReserva(reservaHabitacion);
+		
+		//Mock sobre fechas para assertions
+		LocalDate hoy = LocalDate.now();
+		
+		//Reserva de la casa desde ayer hasta 3 días más adelante.
+		when(reservaCasa.getComienzo()).thenReturn(hoy.minusDays(1));
+		when(reservaCasa.getFin()).thenReturn(hoy.plusDays(3));
+		
+		//Reserva del depto desde pasado mañana hasta 5 días más adelante.
+		when(reservaDepto.getComienzo()).thenReturn(hoy.plusDays(2));
+		when(reservaDepto.getFin()).thenReturn(hoy.plusDays(7));
+		
+		//Reserva de la habitación desde hoy hasta pasado mañana.
+		when(reservaHabitacion.getComienzo()).thenReturn(hoy.plusDays(1));
+		when(reservaHabitacion.getFin()).thenReturn(hoy.plusDays(2));
+		
+		
+		assertTrue(gestor.hayReservaEn(casa, hoy, hoy.plusDays(1)));
+		
+		assertTrue(gestor.hayReservaEn(casa, hoy.minusDays(3), hoy));
+		
+		assertTrue(gestor.hayReservaEn(casa, hoy, hoy.plusDays(8)));
+	
+		assertTrue(gestor.hayReservaEn(casa, hoy.minusDays(5), hoy));
+		
+		assertTrue(gestor.hayReservaEn(casa, hoy.plusDays(2), hoy.plusDays(10)));
+		
+		
+		assertFalse(gestor.hayReservaEn(depto, hoy, hoy.plusDays(1)));
+		
+		assertFalse(gestor.hayReservaEn(depto, hoy.plusDays(8), hoy.plusDays(11)));
+		
+		
+		//También funciona con la reserva de un inmueble que no esté reservado.
+		
+		assertFalse(gestor.hayReservaEn(mock(Inmueble.class), hoy, hoy.plusDays(1)));
+		
+		
+		//Reservas de hoy
+		
+		assertTrue(gestor.hayReservaHoy(casa));
+		assertFalse(gestor.hayReservaHoy(habitacion));
+		assertFalse(gestor.hayReservaHoy(depto));
+		
+		
+		assertFalse(gestor.hayReservaHoy(mock(Inmueble.class)));
 		
 	}
 	
