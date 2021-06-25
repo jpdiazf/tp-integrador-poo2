@@ -68,7 +68,8 @@ public class Usuario implements IRankeable, IVisualizable, IListenerReserva {
 		return this.gestorRankeos;
 	}
 	
-	public void rankear(Rankeo rankeo) {
+	public void rankear(Rankeo rankeo, Reserva reserva) {
+		reserva.verificarCheckOut(rankeo.getRankeable());
         rankeo.getRankeable().recibirRankeo(rankeo);
     }
 

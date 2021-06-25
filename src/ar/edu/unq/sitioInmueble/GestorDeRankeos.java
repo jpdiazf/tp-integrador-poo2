@@ -50,7 +50,7 @@ public class GestorDeRankeos {
     	String textoComentarios = "";
     	
     	for(Rankeo rankeo : rankeos) {
-    		textoComentarios += rankeo.getComentario();
+    		textoComentarios += rankeo.getComentario() + ". ";
     	}
     	
     	return textoComentarios;
@@ -73,8 +73,9 @@ public class GestorDeRankeos {
      }
     
     public void validarRankeo(Rankeo rankeo) {
-		// TODO Auto-generated method stub
-		
+//		if(this.checkoutRealizado()) {
+//			
+//		}
 	}
     
     private double promedioPuntaje(Rankeo rankeo) {

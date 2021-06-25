@@ -26,7 +26,7 @@ public class Rankeo {
     	return this.categorias;
     }
     
-    public String textoRankeo() {
-    	return null; // TODO
+    public Integer getPuntajeCategoria(String string) {
+    	return categorias.get("Amabilidad");
     }
 }
