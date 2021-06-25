@@ -64,7 +64,7 @@ class SitioInmueblesTest {
 		p2 = mock(PoliticaCancelacion.class);
 		
 		tipoInmueble1 = "Casa";
-		tipoInmueble2 = "Habitación";
+		tipoInmueble2 = "Habitaciï¿½n";
 		tipoInmueble3 = "Quincho";
 		
 		servicioInmueble1 = "Aire acondicionado";
@@ -182,25 +182,25 @@ class SitioInmueblesTest {
 		when(quincho.getCapacidad()).thenReturn(20);
 		
 		LocalDate hoy = LocalDate.now();
-		LocalDate mañana = LocalDate.now().plusDays(1);
+		LocalDate maniaana = LocalDate.now().plusDays(1);
 		
-		when(casita.getPrecioPorPeriodo(hoy, mañana)).thenReturn(1000d);
-		when(habitacion.getPrecioPorPeriodo(hoy, mañana)).thenReturn(500d);
-		when(quincho.getPrecioPorPeriodo(hoy, mañana)).thenReturn(2500d);
+		when(casita.getPrecioPorPeriodo(hoy, maniana)).thenReturn(1000d);
+		when(habitacion.getPrecioPorPeriodo(hoy, maniana)).thenReturn(500d);
+		when(quincho.getPrecioPorPeriodo(hoy, maniana)).thenReturn(2500d);
 		
-		//BÚSQUEDA CANTIDAD HUÉSPEDES
-		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, 6, null, null);
-		//habitación es de Quilmes y está disponible, ¡pero sólo alberga 2 personas! (quincho es de Berazategui)
+		//Bï¿½SQUEDA CANTIDAD HUï¿½SPEDES
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, maniana, 6, null, null);
+		//habitaciï¿½n es de Quilmes y estï¿½ disponible, ï¿½pero sï¿½lo alberga 2 personas! (quincho es de Berazategui)
 		assertTrue(inmueblesFiltrados.contains(casita) && !inmueblesFiltrados.contains(habitacion));
 		
-		//BÚSQUEDA PRECIO MÍNIMO
-		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, null, 2000d, null); 
-		//casa y habitación son de Quilmes y están disponibles, ¡pero sus precios no superan al mínimo! (quincho es de Berazategui)
+		//Bï¿½SQUEDA PRECIO Mï¿½NIMO
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, maniana, null, 2000d, null); 
+		//casa y habitaciï¿½n son de Quilmes y estï¿½n disponibles, ï¿½pero sus precios no superan al mï¿½nimo! (quincho es de Berazategui)
 		assertEquals(inmueblesFiltrados.size(), 0);
 		
-		//BÚSQUEDA PRECIO MÁXIMO
-		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, null, null, 800d);
-		//casa es de Quilmes y está disponible, ¡pero el precio supera al máximo!
+		//Bï¿½SQUEDA PRECIO Mï¿½XIMO
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, maniana, null, null, 800d);
+		//casa es de Quilmes y estï¿½ disponible, ï¿½pero el precio supera al mï¿½ximo!
 		assertTrue(inmueblesFiltrados.contains(habitacion) && !inmueblesFiltrados.contains(casita));
 		
 		
@@ -214,8 +214,8 @@ class SitioInmueblesTest {
 		when(depto.getCapacidad()).thenReturn(4);
 		when(cabania.getCapacidad()).thenReturn(8);
 		
-		when(depto.getPrecioPorPeriodo(hoy, mañana)).thenReturn(1500d);
-		when(cabania.getPrecioPorPeriodo(hoy, mañana)).thenReturn(2000d);
+		when(depto.getPrecioPorPeriodo(hoy, maniana)).thenReturn(1500d);
+		when(cabania.getPrecioPorPeriodo(hoy, maniana)).thenReturn(2000d);
 		
 		sitio.darDeAltaInmueble(depto);
 		sitio.darDeAltaInmueble(cabania);
@@ -226,13 +226,13 @@ class SitioInmueblesTest {
 		 * Berazategui -> (quincho, $2500, 20pers), (cabania, $2000, 8pers)
 		 */
 		
-		//BÚSQUEDAS TOTALES
-		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, 4, 1000d, 1400d);
-		//habitacion es de Quilmes pero sólo admite 2 personas; depto es de quilmes pero supera el precio máximo de $1400
+		//Bï¿½SQUEDAS TOTALES
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, maniana, 4, 1000d, 1400d);
+		//habitacion es de Quilmes pero sï¿½lo admite 2 personas; depto es de quilmes pero supera el precio mï¿½ximo de $1400
 		assertTrue(inmueblesFiltrados.contains(casita) && inmueblesFiltrados.size() == 1);
 		
-		inmueblesFiltrados = sitio.realizarBusqueda("Berazategui", hoy, mañana, 8, 2000d, 2500d);
-		//ambos inmuebles de Berazategui cumplen con cada parámetro
+		inmueblesFiltrados = sitio.realizarBusqueda("Berazategui", hoy, maniana, 8, 2000d, 2500d);
+		//ambos inmuebles de Berazategui cumplen con cada parï¿½metro
 		assertTrue(inmueblesFiltrados.contains(quincho) && inmueblesFiltrados.contains(cabania) && inmueblesFiltrados.size() == 2);
 		
 		
@@ -241,15 +241,15 @@ class SitioInmueblesTest {
 		
 		sitio.setGestorReservas(nuevoGestorR);
 		
-		when(nuevoGestorR.hayReservaEn(casita, hoy, mañana)).thenReturn(true); //ahora tengo entre mis reservas, a la correspondiente a la casita.
+		when(nuevoGestorR.hayReservaEn(casita, hoy, maniana)).thenReturn(true); //ahora tengo entre mis reservas, a la correspondiente a la casita.
 		
 		
-		//PRIMERA BÚSQUEDA TOTAL, DE NUEVO
-		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, mañana, 4, 1000d, 1400d);
+		//PRIMERA Bï¿½SQUEDA TOTAL, DE NUEVO
+		inmueblesFiltrados = sitio.realizarBusqueda("Quilmes", hoy, maniana, 4, 1000d, 1400d);
 		
-		verify(nuevoGestorR, times(1)).hayReservaEn(casita, hoy, mañana);
-		//habitacion es de Quilmes pero sólo admite 2 personas; depto es de quilmes pero supera el precio máximo de $1400.
-		//sólo corresponde la casita, pero esta se encuentra ya reservada!!!
+		verify(nuevoGestorR, times(1)).hayReservaEn(casita, hoy, maniana);
+		//habitacion es de Quilmes pero sï¿½lo admite 2 personas; depto es de quilmes pero supera el precio mï¿½ximo de $1400.
+		//sï¿½lo corresponde la casita, pero esta se encuentra ya reservada!!!
 		assertFalse(inmueblesFiltrados.contains(casita) && inmueblesFiltrados.size() == 1);
 		
 	}
@@ -257,7 +257,7 @@ class SitioInmueblesTest {
 	@Test
 	void testRealizacionReserva() throws Exception {
 		
-		//REALIZACIÓN EXITOSA
+		//REALIZACIï¿½N EXITOSA
 		
 		sitio.setGestorReservas(nuevoGestorR);
 		
@@ -429,7 +429,7 @@ class SitioInmueblesTest {
 		
 		when(nuevoGestorR.hayReservaHoy(depto)).thenReturn(true);
 		when(nuevoGestorR.hayReservaHoy(quincho)).thenReturn(true);
-		when(nuevoGestorR.hayReservaHoy(habitacion)).thenReturn(false); //NO Hay reserva hoy, por ende está libre!
+		when(nuevoGestorR.hayReservaHoy(habitacion)).thenReturn(false); //NO Hay reserva hoy, por ende estï¿½ libre!
 		
 		ArrayList<Inmueble> inmueblesLibres = sitio.mostrarInmueblesLibres();
 		
@@ -442,18 +442,18 @@ class SitioInmueblesTest {
 		assertTrue(inmueblesLibres.contains(habitacion));
 		
 		
-		//TASA DE OCUPACIÓN
+		//TASA DE OCUPACIï¿½N
 		
 		when(reservaEj1.getComienzo()).thenReturn(hoy.minusDays(1)); //cuenta como alquilado dentro del site
 		when(reservaEj2.getComienzo()).thenReturn(hoy.minusDays(2)); //cuenta como alquilado dentro del site
-		when(reservaEj3.getComienzo()).thenReturn(hoy.plusDays(3)); //aún no fue alquilado. Reserva futura!
+		when(reservaEj3.getComienzo()).thenReturn(hoy.plusDays(3)); //aï¿½n no fue alquilado. Reserva futura!
 		
 		//tengo 2 inmuebles alquilados, y 5 de alta.
 		
 		assertEquals(sitio.getCantidadInmueblesAlquilados(), 2);
 		assertEquals(sitio.getInmueblesDeAlta().size(), 5);
 		
-		Double tasa = sitio.tasaDeOcupacion(); //la tasa de ocupación debería ser 2 dividido 5 => 0.4
+		Double tasa = sitio.tasaDeOcupacion(); //la tasa de ocupaciï¿½n deberï¿½a ser 2 dividido 5 => 0.4
 		
 		assertEquals(tasa, 0.4d);
 		

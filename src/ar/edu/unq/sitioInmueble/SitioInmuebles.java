@@ -43,7 +43,7 @@ public class SitioInmuebles {
 		categoriasRankeables.put(Entidad.INQUILINO, new ArrayList<String>());
 		categoriasRankeables.put(Entidad.PROPIETARIO, new ArrayList<String>());
 		
-		this.gestorNotificaciones = new GestorDeNotificaciones(this);
+		this.gestorNotificaciones = new GestorDeNotificaciones();
 		this.gestorReservas = new GestorDeReservas(this);
 	}
 
@@ -141,7 +141,7 @@ public class SitioInmuebles {
 	}
 	
 	
-	//BÚSQUEDAS - VISUALIZACIONES //
+	//Bï¿½SQUEDAS - VISUALIZACIONES //
 	
 	
 	public ArrayList<Inmueble> realizarBusqueda(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, Integer cantidadHuespedes, Double precioMinimo, Double precioMaximo){
@@ -174,7 +174,7 @@ public class SitioInmuebles {
 		return this.getGestorReservas().hayReservaEn(inmueble, fechaEntrada, fechaSalida);
 	}
 	
-	//LISTADOS DE GESTIÓN//
+	//LISTADOS DE GESTIï¿½N//
 	
 	
 	public ArrayList<Usuario> topTenInquilinosActivos() {

@@ -238,10 +238,10 @@ class UsuarioTest {
     	Reserva departamento = mock(Reserva.class);
     	LocalDate hoy = LocalDate.of(2021, 6, 24);
     	LocalDate ayer = hoy.minusDays(1);
-    	LocalDate mañana = hoy.plusDays(1);
+    	LocalDate maniana = hoy.plusDays(1);
     	
     	when(habitacion.getComienzo()).thenReturn(hoy);
-    	when(casa.getComienzo()).thenReturn(mañana);
+    	when(casa.getComienzo()).thenReturn(maniana);
     	when(departamento.getComienzo()).thenReturn(ayer);
     	
     	rodri.realizarReserva(habitacion);
