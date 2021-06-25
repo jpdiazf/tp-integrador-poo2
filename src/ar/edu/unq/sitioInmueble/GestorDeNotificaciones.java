@@ -11,23 +11,15 @@ import sensores.SensorReserva;
 
 public class GestorDeNotificaciones {
 
+	protected SensorBajaDePrecio sensorBajaDePrecio;
+	protected SensorCancelacion sensorCancelacion;
+	protected SensorReserva sensorReserva;
 	
-	private SitioInmuebles sitioGestion;
-	
-	private SensorBajaDePrecio sensorBajaDePrecio;
-	private SensorCancelacion sensorCancelacion;
-	private SensorReserva sensorReserva;
-	
-	public GestorDeNotificaciones(SitioInmuebles sitio) {
+	public GestorDeNotificaciones() {
 		this.sensorBajaDePrecio = new SensorBajaDePrecio();
 		this.sensorCancelacion = new SensorCancelacion();
 		this.sensorReserva = new SensorReserva();
 	}
-	
-	public SitioInmuebles getSitio() {
-		return this.sitioGestion;
-	}
-	
 	
 	//SUSCRIPCIONES
 	
