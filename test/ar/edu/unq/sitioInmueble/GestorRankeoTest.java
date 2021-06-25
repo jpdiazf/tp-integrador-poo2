@@ -1,4 +1,4 @@
-package clases;
+package ar.edu.unq.sitioInmueble;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ar.edu.unq.sitioInmueble.GestorDeRankeos;
+import clases.Rankeo;
 
 class GestorRankeoTest {
 
