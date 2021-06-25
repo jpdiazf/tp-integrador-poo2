@@ -1,12 +1,10 @@
 package ar.edu.unq.sitioInmueble;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 import clases.Inmueble;
 import clases.Reserva;
-import clases.Usuario;
 
 public class GestorDeReservas {
 

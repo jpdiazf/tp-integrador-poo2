@@ -1,6 +1,5 @@
 package ar.edu.unq.sitioInmueble;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -12,12 +11,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import clases.*;
-import excepciones.EmailAdressNotFound;
 import interfaces.IListenerBajaDePrecio;
 import interfaces.IListenerCancelacion;
 import interfaces.IListenerReserva;
 
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -182,7 +179,6 @@ class SitioInmueblesTest {
 		when(quincho.getCapacidad()).thenReturn(20);
 		
 		LocalDate hoy = LocalDate.now();
-		LocalDate maniaana = LocalDate.now().plusDays(1);
 		
 		when(casita.getPrecioPorPeriodo(hoy, maniana)).thenReturn(1000d);
 		when(habitacion.getPrecioPorPeriodo(hoy, maniana)).thenReturn(500d);

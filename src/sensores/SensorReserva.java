@@ -2,7 +2,6 @@ package sensores;
 import java.util.ArrayList;
 import java.util.List;
 
-import clases.Inmueble;
 import clases.Reserva;
 import interfaces.IListenerReserva;
 

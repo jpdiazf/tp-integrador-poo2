@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import clases.PrecioPeriodo;
-
 class PrecioPeriodoTestCase {
 
 	PrecioPeriodo pp;

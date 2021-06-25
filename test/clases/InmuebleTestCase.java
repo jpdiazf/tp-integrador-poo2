@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import interfaces.IFormaDePago;
 import interfaces.IFoto;
 
 
@@ -24,6 +24,7 @@ class InmuebleTestCase {
 	IFoto foto2;
 	PrecioPeriodo pp1;
 	PrecioPeriodo pp2;
+	IFormaDePago debito;
 	Inmueble casa;
 	Inmueble habitacion;
 	Inmueble departamento;
@@ -36,7 +37,7 @@ class InmuebleTestCase {
 		pp2 = new PrecioPeriodo(LocalDate.of(2021, 8, 1), LocalDate.of(2021, 9, 1), 700.0);
 		casa = new Inmueble(duenio, "CASA", 40.0, "Argentina", "Quilmes","Mitre 406", Arrays.asList("WIFI","AIRE"),
 						5, Arrays.asList(foto1,foto2),LocalTime.of(11,00), LocalTime.of(22,0), new CancelacionGratuita(),
-						Arrays.asList("Efectivo","Debito"), Arrays.asList(pp1,pp2));
+						Arrays.asList(debito), Arrays.asList(pp1,pp2));
 	}
 
 	@Test
@@ -54,7 +55,7 @@ class InmuebleTestCase {
 		assertEquals(casa.getHorarioCheckIn(), LocalTime.of(11,00));
 		assertEquals(casa.getHorarioCheckOut(), LocalTime.of(22,00));
 		assertTrue(casa.getPoliticaCancelacion() instanceof CancelacionGratuita);
-		assertEquals(casa.getFormasDePagoAceptadas(), Arrays.asList("Efectivo","Debito"));
+		assertEquals(casa.getFormasDePagoAceptadas(), Arrays.asList(debito));
 		assertEquals(casa.getPrecios(), Arrays.asList(pp1, pp2));
 
 	}

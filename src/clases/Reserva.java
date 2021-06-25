@@ -18,6 +18,7 @@ public class Reserva {
 	public Reserva(Usuario inquilino, Inmueble inmueble, IFormaDePago formaDePago, LocalDate comienzo, LocalDate fin) {
 		this.inquilino = inquilino;
 		this.inmueble = inmueble;
+		this.formaDePago = formaDePago;
 		this.comienzo = comienzo;
 		this.fin = fin;
 		this.aceptada = false;

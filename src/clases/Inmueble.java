@@ -1,10 +1,10 @@
 package clases;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import interfaces.IFormaDePago;
 import interfaces.IFoto;
 import interfaces.IVisualizable;
 import ar.edu.unq.sitioInmueble.*;
@@ -23,7 +23,7 @@ public class Inmueble implements IVisualizable {
 	private LocalTime horarioCheckIn;
 	private LocalTime horarioCheckOut;
 	private PoliticaCancelacion politicaCancelacion;
-	private List<String> formasDePagoAceptadas;
+	private List<IFormaDePago> formasDePagoAceptadas;
 	private List<PrecioPeriodo> precios;
 	private GestorDeRankeos gestorDeRankeos;
 	private Integer vecesAlquilado;
@@ -31,7 +31,7 @@ public class Inmueble implements IVisualizable {
 	public Inmueble(Usuario propietario, String tipo, Double superficie, String pais, String ciudad,
 					String direccion, List<String> servicios, Integer capacidad, List<IFoto> fotos,
 					LocalTime horarioCheckIn, LocalTime horarioCheckOut, PoliticaCancelacion politicaCancelacion,
-					List<String> formasDePagoAceptadas, List<PrecioPeriodo> precios) {
+					List<IFormaDePago> formasDePagoAceptadas, List<PrecioPeriodo> precios) {
 		
 		this.propietario = propietario;
 		this.tipo = tipo ;
@@ -136,7 +136,7 @@ public class Inmueble implements IVisualizable {
 	public PoliticaCancelacion getPoliticaCancelacion() {
 		return this.politicaCancelacion;
 	}
-	public List<String> getFormasDePagoAceptadas() {
+	public List<IFormaDePago> getFormasDePagoAceptadas() {
 		return this.formasDePagoAceptadas;
 	}
 	

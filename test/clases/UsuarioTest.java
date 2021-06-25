@@ -6,7 +6,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import ar.edu.unq.sitioInmueble.GestorDeRankeos;
 import ar.edu.unq.sitioInmueble.SitioInmuebles;
 import excepciones.ReservationNotFound;
-import interfaces.IFormaDePago;
 import interfaces.IVisualizable;
 
 class UsuarioTest {
@@ -23,7 +21,6 @@ class UsuarioTest {
 	private Usuario martin;
 	private Inmueble departamento;
 	private SitioInmuebles sitio;
-    private IFormaDePago transferencia;
     private MailServer mailServer;
     private GestorDeRankeos gestorRodri;
     private GestorDeRankeos gestorMartin;
@@ -36,7 +33,6 @@ class UsuarioTest {
 		sitio = mock(SitioInmuebles.class);
         mailServer = mock(MailServer.class);
 		departamento = mock(Inmueble.class);
-        transferencia = mock(IFormaDePago.class);
         gestorRodri = mock(GestorDeRankeos.class);
         gestorMartin = mock(GestorDeRankeos.class);
         gestorPaula = mock(GestorDeRankeos.class);
