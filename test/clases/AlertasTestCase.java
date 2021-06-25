@@ -7,13 +7,8 @@ import static org.mockito.Mockito.any;
 
 import org.junit.jupiter.api.Test;
 
-import clases.Inmueble;
-import clases.Reserva;
-import clases.Usuario;
 import interfaces.IListenerBajaDePrecio;
 import interfaces.IListenerCancelacion;
-import interfaces.ISuscriptorBajaDePrecio;
-import interfaces.ISuscriptorCancelacion;
 import sensores.SensorBajaDePrecio;
 import sensores.SensorCancelacion;
 import sensores.SensorReserva;

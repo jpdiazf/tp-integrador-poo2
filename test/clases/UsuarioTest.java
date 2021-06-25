@@ -114,8 +114,9 @@ class UsuarioTest {
 	@Test
 	void usuarioEnviaUnRankeoTest() {
 		Rankeo rankeo = mock(Rankeo.class);
+		Reserva reserva = mock(Reserva.class);
 		when(rankeo.getRankeable()).thenReturn(rodri);
-		martin.rankear(rankeo);
+		martin.rankear(rankeo, reserva);
 		
 		verify(gestorRodri, times(1)).addRankeo(rankeo);
 	}
@@ -123,8 +124,9 @@ class UsuarioTest {
 	@Test
 	void usuarioVisualizaUnIVisualizableTest() {
 		Rankeo rankeo = mock(Rankeo.class);
+		Reserva reserva = mock(Reserva.class);
 		when(rankeo.getRankeable()).thenReturn(rodri);
-		martin.rankear(rankeo);
+		martin.rankear(rankeo, reserva);
 		
 		verify(gestorRodri, times(1)).addRankeo(rankeo);
 	}

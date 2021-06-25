@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 
 class InmuebleTestCase {
-	Usuario dueño;
+	Usuario duenio;
 	Foto foto1;
 	Foto foto2;
 	PrecioPeriodo pp1;
@@ -29,10 +29,10 @@ class InmuebleTestCase {
 	
 	@BeforeEach
 	void setup() {
-		dueño = mock(Usuario.class);
+		duenio = mock(Usuario.class);
 		pp1 = new PrecioPeriodo(LocalDate.of(2021, 5, 1), LocalDate.of(2021, 6, 1), 500.0);
 		pp2 = new PrecioPeriodo(LocalDate.of(2021, 8, 1), LocalDate.of(2021, 9, 1), 700.0);
-		casa = new Inmueble(dueño, "CASA", 40.0, "Argentina", "Quilmes","Mitre 406", Arrays.asList("WIFI","AIRE"),
+		casa = new Inmueble(duenio, "CASA", 40.0, "Argentina", "Quilmes","Mitre 406", Arrays.asList("WIFI","AIRE"),
 						5, Arrays.asList(foto1,foto2),LocalTime.of(11,00), LocalTime.of(22,0), new CancelacionGratuita(),
 						Arrays.asList("Efectivo","Debito"), Arrays.asList(pp1,pp2));
 	}
@@ -40,7 +40,7 @@ class InmuebleTestCase {
 	@Test
 	void constructorTest(){
 		
-		assertEquals(casa.getPropietario(), dueño);
+		assertEquals(casa.getPropietario(), duenio);
 		assertEquals(casa.getTipo(), "CASA");
 		assertEquals(casa.getSuperficie(), 40.0);
 		assertEquals(casa.getPais(), "Argentina");

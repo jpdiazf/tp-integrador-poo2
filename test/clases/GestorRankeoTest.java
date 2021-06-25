@@ -52,6 +52,11 @@ class GestorRankeoTest {
 	}
 	
 	@Test
+	void textoComentariosTest() {
+		assertEquals("Bueno. Regular. Malo. ", gr.textoComentarios());
+	}
+	
+	@Test
 	void promedioRankeingTest() {
 		//Excersice
 		double tRespuesta = gr.promedioRanking("TiempoDeRespuesta");

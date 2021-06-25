@@ -2,6 +2,7 @@ package clases;
 import java.time.LocalDate;
 
 import interfaces.IFormaDePago;
+import interfaces.IRankeable;
 
 public class Reserva {
 
@@ -23,10 +24,9 @@ public class Reserva {
 		this.precio = inmueble.getPrecioPorPeriodo(comienzo, fin);
 	}
 	
-    public void visualizar() {
-        // TODO Auto-generated method stub
-        
-    }
+	public void verificarCheckOut(IRankeable rankeable) {
+		// TODO Auto-generated method stub
+	}
     
     public void aprobar() {
     	this.aceptada = true; //y podr� luego notificar al inquilino?
@@ -72,4 +72,5 @@ public class Reserva {
 	public Usuario getPropietario() {
 		return inmueble.getPropietario();
 	}
+
 }
