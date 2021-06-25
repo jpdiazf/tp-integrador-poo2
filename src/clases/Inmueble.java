@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import interfaces.IFoto;
 import interfaces.IVisualizable;
 import ar.edu.unq.sitioInmueble.*;
 
@@ -18,7 +19,7 @@ public class Inmueble implements IVisualizable {
 	private String direccion;
 	private List<String> servicios;
 	private Integer capacidad;
-	private List<Foto> fotos;
+	private List<IFoto> fotos;
 	private LocalTime horarioCheckIn;
 	private LocalTime horarioCheckOut;
 	private PoliticaCancelacion politicaCancelacion;
@@ -28,7 +29,7 @@ public class Inmueble implements IVisualizable {
 	private Integer vecesAlquilado;
 	
 	public Inmueble(Usuario propietario, String tipo, Double superficie, String pais, String ciudad,
-					String direccion, List<String> servicios, Integer capacidad, List<Foto> fotos,
+					String direccion, List<String> servicios, Integer capacidad, List<IFoto> fotos,
 					LocalTime horarioCheckIn, LocalTime horarioCheckOut, PoliticaCancelacion politicaCancelacion,
 					List<String> formasDePagoAceptadas, List<PrecioPeriodo> precios) {
 		
@@ -120,7 +121,7 @@ public class Inmueble implements IVisualizable {
 	public Integer getCapacidad() {
 		return this.capacidad;
 	}
-	public List<Foto> getFotos() {
+	public List<IFoto> getFotos() {
 		return this.fotos;
 	}
 	public LocalTime getHorarioCheckIn() {

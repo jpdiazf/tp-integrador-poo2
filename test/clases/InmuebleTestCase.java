@@ -15,11 +15,13 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import interfaces.IFoto;
+
 
 class InmuebleTestCase {
 	Usuario duenio;
-	Foto foto1;
-	Foto foto2;
+	IFoto foto1;
+	IFoto foto2;
 	PrecioPeriodo pp1;
 	PrecioPeriodo pp2;
 	Inmueble casa;
