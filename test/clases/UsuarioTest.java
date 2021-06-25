@@ -232,7 +232,7 @@ class UsuarioTest {
     	Reserva habitacion = mock(Reserva.class);
     	Reserva casa = mock(Reserva.class);
     	Reserva departamento = mock(Reserva.class);
-    	LocalDate hoy = LocalDate.of(2021, 6, 24);
+    	LocalDate hoy = LocalDate.now();
     	LocalDate ayer = hoy.minusDays(1);
     	LocalDate maniana = hoy.plusDays(1);
     	
